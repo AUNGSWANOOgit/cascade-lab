@@ -1,0 +1,1555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cascade Lab</title>
+<meta name="description" content="Practise the pneumatic cascade method: split a sequence into groups, fill in the cascade table, wire the circuit and watch it run step by step.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e2b34'/%3E%3Cpath d='M6 10h20M6 16h20M6 22h20' stroke='%23e8eef2' stroke-width='2.4'/%3E%3Cpath d='M6 16h20' stroke='%2314b8a6' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('cascade-lab-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{
+  --bg:#e8ecef;--paper:#ffffff;--paper2:#f4f6f8;--ink:#1b2730;--muted:#5a6873;--line:#d1d8dd;--line2:#e5e9ec;
+  --plate:#1e2b34;--plateink:#e8eef2;--platemuted:#9fb0bc;
+  --bench:#dce1e5;--slot:#c6ced4;--slothi:#eef1f3;
+  --sym:#22303a;--symfill:#fbfcfc;--soft:#8995a0;
+  --air:#1f6fb2;--airsoft:#cfe0f1;
+  --sig:#e3a400;--sigsoft:#fdf1c6;
+  --ok:#1d7a41;--okbg:#ddf2e4;--bad:#c4312a;--badbg:#fbe4e2;--warn:#965800;--warnbg:#fcefd0;
+  --btn:#1b2730;--onbtn:#ffffff;
+  --g1:#0e8a80;--g2:#d4580b;--g3:#7444d0;--g4:#c92c69;--g5:#4d8a10;--g6:#1f6fc4;
+  --font:"Barlow",Bahnschrift,"DIN Alternate","Segoe UI",Roboto,system-ui,sans-serif;
+  --cond:"Barlow Semi Condensed","Barlow",Bahnschrift,"Arial Narrow","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#11161a;--paper:#192127;--paper2:#141b20;--ink:#e3e9ee;--muted:#95a3ae;--line:#2b353d;--line2:#20292f;
+  --plate:#0c1114;--plateink:#e3e9ee;--platemuted:#8394a1;
+  --bench:#1d252b;--slot:#141a1f;--slothi:#262f36;
+  --sym:#cfd8df;--symfill:#232c33;--soft:#6c7a85;
+  --air:#5aa7ec;--airsoft:#1c3a56;
+  --sig:#f2c230;--sigsoft:#3a3214;
+  --ok:#4fd17f;--okbg:#11301e;--bad:#f2766d;--badbg:#3a1817;--warn:#f0b43c;--warnbg:#382a0d;
+  --btn:#e3e9ee;--onbtn:#11161a;
+  --g1:#2dd4bf;--g2:#fb923c;--g3:#a78bfa;--g4:#f472b6;--g5:#a3e635;--g6:#60a5fa;
+  color-scheme:dark;}}
+:root[data-theme=dark]{
+  --bg:#11161a;--paper:#192127;--paper2:#141b20;--ink:#e3e9ee;--muted:#95a3ae;--line:#2b353d;--line2:#20292f;
+  --plate:#0c1114;--plateink:#e3e9ee;--platemuted:#8394a1;
+  --bench:#1d252b;--slot:#141a1f;--slothi:#262f36;
+  --sym:#cfd8df;--symfill:#232c33;--soft:#6c7a85;
+  --air:#5aa7ec;--airsoft:#1c3a56;
+  --sig:#f2c230;--sigsoft:#3a3214;
+  --ok:#4fd17f;--okbg:#11301e;--bad:#f2766d;--badbg:#3a1817;--warn:#f0b43c;--warnbg:#382a0d;
+  --btn:#e3e9ee;--onbtn:#11161a;
+  --g1:#2dd4bf;--g2:#fb923c;--g3:#a78bfa;--g4:#f472b6;--g5:#a3e635;--g6:#60a5fa;
+  color-scheme:dark;}
+.g1{--gc:var(--g1)}.g2{--gc:var(--g2)}.g3{--gc:var(--g3)}.g4{--gc:var(--g4)}.g5{--gc:var(--g5)}.g6{--gc:var(--g6)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--cond)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:6px 12px;font-weight:600;font-size:14.5px;line-height:1.3}
+button:hover:not(:disabled){border-color:var(--ink)}
+button:disabled{opacity:.4;cursor:default}
+button.pri{background:var(--btn);border-color:var(--btn);color:var(--onbtn)}
+button.pri:hover:not(:disabled){filter:brightness(1.15)}
+:focus-visible{outline:3px solid var(--sig);outline-offset:2px}
+.noans .ans{display:none!important}
+code{font-family:var(--cond);font-weight:700;font-size:1.02em}
+kbd{font:600 12.5px var(--font);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--paper)}
+
+/* nameplate */
+.top{background:var(--plate);color:var(--plateink);display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding:14px max(20px,calc((100vw - 1320px)/2 + 16px))}
+.brand{display:flex;gap:14px;align-items:center}
+.brand svg{width:42px;height:42px;flex:none}
+h1{font-size:26px;line-height:1.05;margin:0;font-weight:800;letter-spacing:.01em}
+.sub{margin:2px 0 0;color:var(--platemuted);font-size:14px}
+.session{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.session button{background:transparent;color:var(--plateink);border-color:rgba(232,238,242,.22);font-size:13.5px;padding:5px 10px}
+.session button:hover{border-color:var(--plateink)}
+.exbadge{display:none;font-size:13px;font-weight:700;color:#1e2b34;background:var(--sig);padding:2px 10px;border-radius:999px}
+.noans .exbadge{display:inline-block}
+
+/* layout */
+main.grid{max-width:1320px;margin:0 auto;padding:18px 16px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 20px;min-width:0}
+.c-seq{grid-column:span 4}.c-table{grid-column:span 8}.c-circ{grid-column:span 12}
+.c-test{grid-column:span 4}.c-log{grid-column:span 4}.c-wires{grid-column:span 4}
+@media (max-width:1000px){.c-seq,.c-table,.c-test,.c-log,.c-wires{grid-column:span 12}}
+h2{font-size:20px;line-height:1.2;margin:0 0 10px;display:flex;align-items:center;gap:10px;font-weight:700}
+h2 .n{width:26px;height:26px;border-radius:6px;background:var(--btn);color:var(--onbtn);display:inline-grid;place-items:center;font-size:15px;flex:none}
+h3{font-size:16.5px;margin:0 0 4px;font-weight:700}
+.hint{color:var(--muted);font-size:14.5px;margin:0 0 10px}
+.muted{color:var(--muted)}
+.msg{font-size:14.5px;margin:8px 0 0;min-height:1.4em}
+.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.cardhead{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cardhead h2{margin:0}
+
+/* sequence */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;padding:3px;background:var(--paper2);margin-bottom:14px}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:6px}
+.seg button.on{background:var(--btn);color:var(--onbtn)}
+.lbl{display:block;font-size:14px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.inrow{display:flex;gap:6px}
+.inrow input{flex:1;min-width:0;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper2);font:700 20px var(--cond);letter-spacing:.06em;word-spacing:.15em}
+.ex{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;align-items:center;font-size:14px;color:var(--muted)}
+.ex button{font:600 14px var(--cond);padding:1px 9px;border-radius:999px}
+.ex .rnd{border-style:dashed}
+.conf{margin-top:14px;padding:12px 14px;border-radius:8px;background:var(--paper2);border:1px solid var(--line)}
+.conf ol{padding-left:20px;margin:6px 0 0;font-size:14.5px}
+.conf li{margin-bottom:8px}
+.conf p{margin:0;font-size:14.5px}
+.fx{display:block;font-size:14px;margin-top:2px;color:var(--muted)}
+.fx.ok{color:var(--ok)}.fx.bad{color:var(--bad)}
+details.how{margin-top:14px;font-size:14.5px}
+details.how summary{cursor:pointer;font-weight:700;font-family:var(--cond);font-size:16.5px}
+details.how ol{padding-left:20px;margin:8px 0}
+details.how li{margin-bottom:6px}
+details.how p{margin:6px 0;color:var(--muted)}
+
+/* table */
+.tw{overflow-x:auto;padding:2px 2px 4px}
+table.ct{border-collapse:separate;border-spacing:0;font-size:15px}
+.ct th{text-align:left;font-size:14px;color:var(--muted);font-weight:600;padding:6px 8px 6px 0;white-space:nowrap;position:sticky;left:0;background:var(--paper);z-index:1}
+.ct td{padding:4px;text-align:center;border-top:1px solid var(--line2)}
+.ct tr:first-child td{border-top:0}
+.ct td.gap{width:20px;padding:0;border-top:0}
+.ct .gc{font:800 17px var(--cond);border-radius:6px;background:color-mix(in srgb,var(--gc) 15%,transparent);color:var(--gc);padding:5px}
+.ct .gc small{display:block;font:600 12.5px var(--font);color:var(--bad)}
+.ct .gc.bad{outline:2px solid var(--bad);outline-offset:-2px}
+.ct .act{font:800 20px var(--cond);border-bottom:3px solid var(--gc)}
+.cut{width:20px;height:32px;padding:0;border-radius:5px;border:1px dashed var(--line);background:transparent;color:var(--muted);font-size:15px;line-height:1}
+.cut.on{border:1px solid var(--ink);background:var(--btn);color:var(--onbtn)}
+.ct input.ack{width:58px;text-align:center;padding:5px;border:1px solid var(--line);border-radius:6px;background:var(--paper2);font:700 17px var(--cond)}
+.ct select.dest{width:98px;padding:5px 2px;border:1px solid var(--line);border-radius:6px;background:var(--paper2);font-size:13px}
+.ct .ok{border-color:var(--ok)!important;background:var(--okbg)!important}
+.ct .bad{border-color:var(--bad)!important;background:var(--badbg)!important}
+.ct .hl{outline:3px solid var(--sig)!important;outline-offset:1px}
+ul.fb,ul.tl{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+ul.fb li,ul.tl li{display:flex;gap:9px;align-items:flex-start;font-size:14.5px;padding:7px 11px;border-radius:7px}
+li.ok{background:var(--okbg)}li.bad{background:var(--badbg)}li.warn{background:var(--warnbg)}li.tip{background:var(--sigsoft)}
+.ic{font-weight:800;flex:none;width:14px;text-align:center}
+li.ok .ic{color:var(--ok)}li.bad .ic{color:var(--bad)}li.warn .ic{color:var(--warn)}li.tip .ic{color:var(--warn)}
+.verdict{font:700 19px var(--cond);margin:0 0 4px}
+.verdict.ok{color:var(--ok)}.verdict.bad{color:var(--bad)}
+.trace{font-size:14px;color:var(--muted);margin:10px 0 0}
+.trace b{color:var(--ink);font-family:var(--cond)}
+
+/* circuit card */
+.sim{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.startbtn{position:relative;background:radial-gradient(circle at 50% 35%,#3fc06c,#1d7a41 70%);border:2px solid #155c31;color:#fff;font:800 15px var(--cond);letter-spacing:.08em;padding:8px 20px;border-radius:999px;user-select:none;-webkit-user-select:none;touch-action:none;box-shadow:0 4px 0 #0f4424,0 6px 10px rgba(0,0,0,.18)}
+.startbtn:hover:not(:disabled){border-color:#155c31;filter:brightness(1.06)}
+.startbtn.down{transform:translateY(4px);box-shadow:0 0 0 #0f4424,0 0 14px #3fc06c}
+.stop{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
+.stop:hover:not(:disabled){border-color:var(--bad)!important}
+.sw{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;cursor:pointer;user-select:none}
+.sw input{appearance:none;-webkit-appearance:none;width:36px;height:20px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;margin:0;transition:background .15s}
+.sw input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--paper);box-shadow:0 1px 2px rgba(0,0,0,.3);transition:left .15s}
+.sw input:checked{background:var(--ok)}
+.sw input:checked::after{left:18px}
+.spd{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted);font-weight:600}
+.spd input{width:90px;accent-color:var(--ink)}
+.spd output{width:38px;color:var(--ink);font-family:var(--cond);font-weight:700}
+.tools{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.tools .hint{margin:0;flex:1;min-width:260px}
+.statusrow{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:12px;margin-bottom:12px}
+@media (max-width:860px){.statusrow{grid-template-columns:1fr}}
+.panel{background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+.ptitle{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:700;font-family:var(--cond);font-size:16px;margin-bottom:4px}
+.pstat{font:600 14px var(--font);color:var(--muted)}
+.pstat.done{color:var(--ok)}.pstat.error{color:var(--bad)}.pstat.stuck{color:var(--warn)}.pstat.running{color:var(--air)}
+#sdiag{overflow-x:auto}
+#sdiag svg{display:block;width:100%;height:auto;min-width:420px;max-height:230px}
+.sdband{fill:var(--gc);opacity:.13}
+.sdact{font:700 14px var(--cond);fill:var(--gc)}
+.sdb{stroke:var(--line);stroke-dasharray:3 3}
+.sdn{font:600 11px var(--font);fill:var(--muted)}
+.sdc{font:800 16px var(--cond);fill:var(--ink)}
+.sdr{stroke:var(--line)}
+.sdl{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round}
+.sdk{font:600 11px var(--cond);fill:var(--muted)}
+.sdcur{stroke:var(--air);stroke-width:2.2}
+.sdcur.bad{stroke:var(--bad)}.sdcur.stuck{stroke:var(--warn)}
+.sddot{fill:var(--air);stroke:var(--paper);stroke-width:1.5}
+.sddot.off{fill:var(--bad)}
+.narr{font-size:15px;max-height:230px;overflow:auto}
+.narr p{margin:0 0 7px;padding-left:10px;border-left:3px solid var(--line)}
+.narr p:last-child{border-left-color:var(--ink)}
+.narr p.g1,.narr p.g2,.narr p.g3,.narr p.g4,.narr p.g5,.narr p.g6{border-left-color:var(--gc)}
+.narr p.bad{border-left-color:var(--bad);color:var(--bad)}
+.narr p.warn{border-left-color:var(--warn)}
+.narr p.good{border-left-color:var(--ok);color:var(--ok);font-weight:600}
+.narr .empty{color:var(--muted);border:0;padding:0}
+.benchwrap{position:relative}
+.bench{overflow-x:auto;border-radius:8px;border:1px solid var(--line);background:var(--bench)}
+.benchbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:8px}
+.benchbar .btns{align-items:center}
+.bblbl{font-size:14px;color:var(--muted);font-weight:600;margin:0 2px 0 8px}
+.cmsg{padding:52px 20px;text-align:center;color:var(--muted);font-size:15.5px}
+.cmsg b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{display:inline-block;width:24px;height:4px;border-radius:2px}
+.note{font-size:14px;color:var(--muted);margin:6px 0 0}
+
+/* circuit svg */
+#circuit{display:block;font-family:var(--cond);user-select:none;-webkit-user-select:none}
+#circuit text{pointer-events:none}
+#circuit .benchbg{fill:var(--bench)}
+#circuit .slot{stroke:var(--slot);stroke-width:2.5}
+#circuit .slothi{stroke:var(--slothi);stroke-width:1}
+#circuit .sym,#circuit .fl{fill:none;stroke:var(--sym);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+#circuit .ah{fill:var(--sym)}
+#circuit .sq{fill:var(--symfill);stroke:var(--sym);stroke-width:1.5;transition:fill .15s}
+#circuit .sq.active{fill:var(--airsoft)}
+#circuit .cylbody{fill:var(--symfill);stroke:var(--sym);stroke-width:1.8}
+#circuit .ch{fill:transparent}
+#circuit .ch.on{fill:var(--airsoft)}
+#circuit .piston{fill:var(--sym)}
+#circuit .rod{fill:var(--symfill);stroke:var(--sym);stroke-width:1.5}
+#circuit .cam{fill:var(--sym)}
+#circuit .cport{fill:var(--sym)}
+#circuit .tube{fill:none;stroke:var(--soft);stroke-width:1.6}
+#circuit .tube.on{stroke:var(--air);stroke-width:2.8}
+#circuit .exh{fill:var(--symfill);stroke:var(--sym);stroke-width:1.3}
+#circuit .sup{fill:var(--symfill);stroke:var(--air);stroke-width:1.8}
+#circuit .supl{stroke:var(--air);stroke-width:2.4}
+#circuit .pil{stroke:var(--soft);stroke-width:1.3;stroke-dasharray:4 3}
+#circuit .roller,#circuit .btn{fill:var(--symfill);stroke:var(--sym);stroke-width:1.5}
+#circuit .v32.act .roller{fill:var(--okbg);stroke:var(--ok)}
+#circuit .v32.start.act .btn{fill:var(--ok);stroke:var(--ok)}
+#circuit .pressable{cursor:pointer}
+#circuit .handle{cursor:grab}
+#circuit .hbg{fill:var(--symfill);stroke:var(--soft);stroke-width:1}
+#circuit .v32.act .hbg{stroke:var(--ok);fill:var(--okbg)}
+#circuit .vl{font-size:14px;font-weight:700;fill:var(--ink)}
+#circuit .dragbody{cursor:grab}
+#circuit .mk line{stroke:var(--soft);stroke-width:1.6}
+#circuit .mk circle{fill:var(--symfill);stroke:var(--soft);stroke-width:1.5}
+#circuit .mk text{font-size:14px;fill:var(--muted);font-weight:700}
+#circuit .mk.act line,#circuit .mk.act circle{stroke:var(--ok)}
+#circuit .mk.act circle{fill:var(--ok)}
+#circuit .mk.act text{fill:var(--ok)}
+#circuit .bl{stroke:var(--gc);stroke-width:2.4;opacity:.55}
+#circuit .bus.live .bl{opacity:1;stroke-width:5}
+#circuit .bus.pend .bl{opacity:1;stroke-dasharray:8 5}
+#circuit .bus.hint .bl{stroke:var(--sig);opacity:1;stroke-width:6;animation:blink .7s ease-in-out infinite alternate}
+#circuit .busl{font-size:14px;font-weight:700;fill:var(--gc)}
+#circuit .bushit{stroke:transparent;stroke-width:14;cursor:crosshair}
+#circuit .cl{fill:none;stroke:var(--soft);stroke-width:1.6}
+#circuit .cl.on{stroke:var(--gc);stroke-width:2.8}
+#circuit .cl.air.on{stroke:var(--air)}
+#circuit .jd{fill:var(--sym)}
+#circuit .idot{fill:var(--sym)}
+#circuit .wire{fill:none;stroke:var(--soft);stroke-width:2.1;stroke-linejoin:round}
+#circuit .wjd{fill:var(--soft);pointer-events:none}
+#circuit .wg.on .wire{stroke:var(--gc);stroke-width:3.2}
+#circuit .wg.on .wjd{fill:var(--gc)}
+#circuit .wg.leak .wire{stroke:var(--warn);stroke-dasharray:7 4}
+#circuit .wg.sel .wire,#circuit .wg.hov .wire{stroke-width:5.5;stroke:var(--ink)}
+#circuit .wg.hint .wire{stroke:var(--sig);stroke-width:5.5;animation:blink .7s ease-in-out infinite alternate}
+#circuit .whit{fill:none;stroke:transparent;stroke-width:13;cursor:pointer}
+#circuit .port .dot{fill:var(--symfill);stroke:var(--sym);stroke-width:1.6}
+#circuit .port.on .dot{fill:var(--gc);stroke:var(--gc)}
+#circuit .port.leak .dot{fill:var(--warn);stroke:var(--warn)}
+#circuit .port .hit{fill:transparent;cursor:crosshair}
+#circuit .port:hover .dot{stroke:var(--ink);stroke-width:3}
+#circuit .port.pending .dot{fill:var(--sig);stroke:var(--ink);stroke-width:2.5}
+#circuit .port.hint .dot{fill:var(--sig);stroke:var(--sig);stroke-width:6;animation:blink .7s ease-in-out infinite alternate}
+#circuit .plab{font-size:15px;font-weight:700;fill:var(--ink)}
+#circuit .pn{font-size:10.5px;fill:var(--muted)}
+#circuit .big{font-size:26px;font-weight:800;fill:var(--ink)}
+#circuit .zone{font-size:13px;fill:var(--muted);font-weight:600}
+#circuit .rubber{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
+#circuit .v52.conflict .sq{stroke:var(--bad);stroke-width:3.2;animation:blink .5s ease-in-out infinite alternate}
+@keyframes blink{to{opacity:.45}}
+
+/* lower cards */
+ol.log{list-style:none;margin:0;padding:0;max-height:320px;overflow:auto;font-size:14px;display:grid;gap:2px}
+ol.log li{display:flex;gap:10px;padding:3px 6px;border-radius:5px}
+ol.log time{font:600 13px var(--cond);color:var(--muted);flex:none;width:44px;text-align:right}
+ol.log li.good{background:var(--okbg);font-weight:600}
+ol.log li.bad{background:var(--badbg)}
+ol.log li.warn{background:var(--warnbg)}
+ol.log li.start{font-weight:700;color:var(--ok)}
+ol.log li.grp span{color:var(--gc);font-weight:600}
+ul.wl{list-style:none;margin:0;padding:0;display:grid;gap:4px;max-height:320px;overflow:auto;font-size:14px}
+ul.wl li{display:flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;border:1px solid var(--line2);border-radius:6px}
+ul.wl li.sel,ul.wl li:hover{border-color:var(--ink)}
+ul.wl .arr{color:var(--muted)}
+ul.wl button{margin-left:auto;padding:0 8px;font-size:13px;border-radius:5px}
+.pill{font:600 14px var(--font);background:var(--paper2);border:1px solid var(--line);padding:0 9px;border-radius:999px;color:var(--muted)}
+.sm{font-size:13px;padding:3px 9px}
+footer{max-width:1320px;margin:0 auto;padding:2px 20px 30px;color:var(--muted);font-size:14px}
+#toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--plate);color:var(--plateink);padding:10px 16px;border-radius:8px;font-size:15px;font-weight:600;transition:.2s;max-width:min(560px,92vw);text-align:center;z-index:9}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 42 42" aria-hidden="true"><rect width="42" height="42" rx="7" fill="#2c3d48"/><path d="M8 13h26M8 29h26" stroke="#e8eef2" stroke-width="2.4" stroke-linecap="round" opacity=".55"/><path d="M8 21h26" stroke="#2dd4bf" stroke-width="3.4" stroke-linecap="round"/><circle cx="15" cy="21" r="3.4" fill="#2dd4bf"/></svg>
+    <div><h1>Cascade Lab</h1><p class="sub">Practise the cascade method for pneumatic sequential control</p></div>
+  </div>
+  <nav class="session" aria-label="Session">
+    <span class="exbadge">Exercise mode</span>
+    <button id="bTheme" title="Switch between automatic, light and dark theme">Theme: auto</button>
+    <button id="bNew">New</button>
+    <button id="bSave">Save file</button>
+    <button id="bOpen">Open file</button>
+    <input id="fileIn" type="file" accept=".json,application/json" hidden>
+    <button id="bShare" title="A link that opens this exact session, table and wiring included">Copy link</button>
+    <button id="bShareEx" title="Same sequence, blank table, no wiring, answer buttons hidden">Copy exercise link</button>
+  </nav>
+</header>
+
+<main class="grid">
+  <section class="card c-seq">
+    <h2><span class="n">1</span>Sequence</h2>
+    <div class="seg" id="cylSeg" role="group" aria-label="Number of cylinders">
+      <button type="button" data-cyl="2">2 cylinders</button><button type="button" data-cyl="3">3 cylinders</button>
+    </div>
+    <label class="lbl" for="seqIn">Motion sequence</label>
+    <div class="inrow"><input id="seqIn" type="text" spellcheck="false" autocomplete="off" placeholder="A+ B+ B- A-"><button id="bLoad" class="pri">Load</button></div>
+    <div class="ex" id="exList"></div>
+    <p class="msg" id="seqMsg"></p>
+    <div class="conf" id="conf"></div>
+    <details class="how">
+      <summary>How the cascade method works</summary>
+      <ol>
+        <li><b>Group.</b> Cut the sequence into groups, left to right, so no cylinder letter appears twice in the same group. Use as few groups as you can.</li>
+        <li><b>Group lines.</b> Each group gets its own air line (G1, G2…). The cascade valves make sure only one line has air at a time. You need one cascade valve fewer than the number of groups.</li>
+        <li><b>First move of a group</b> takes its pilot air straight from that group's line.</li>
+        <li><b>Every other move</b> is triggered by the limit valve that confirms the move before it, for example <code>a1</code> means “A is fully out”. That limit valve takes its air from the current group line.</li>
+        <li><b>Last limit valve in a group</b> switches the cascade to the next group. The last one of the whole cycle goes through <b>START</b> and switches back to Group I.</li>
+        <li><b>At rest</b> the last group line is live, so the circuit waits for START.</li>
+      </ol>
+      <p>Notation: <code>X+</code> extends cylinder X and <code>X−</code> retracts it. <code>x1</code> is the limit valve pressed when X is fully out, <code>x0</code> when X is fully in.</p>
+      <p>Shortcuts: <kbd>Space</kbd> holds START, <kbd>S</kbd> runs one step, <kbd>Esc</kbd> cancels a wire, <kbd>Delete</kbd> removes the selected wire, <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> undo and redo.</p>
+    </details>
+  </section>
+
+  <section class="card c-table">
+    <h2><span class="n">2</span>Cascade table</h2>
+    <p class="hint">Click <b>⋮</b> between two actions to start a new group there. Then fill in each acknowledgement (ack) signal and where it goes.</p>
+    <div class="tw"><table class="ct" id="ctab"></table></div>
+    <p class="msg" id="grpMsg"></p>
+    <div class="btns"><button id="bCheck" class="pri">Check table</button><button id="bHintT">Hint</button><button id="bClearT">Clear table</button><button id="bAnsT" class="ans">Show answer</button></div>
+    <ul class="fb" id="tabFb"></ul>
+  </section>
+
+  <section class="card c-circ">
+    <div class="cardhead">
+      <h2><span class="n">3</span>Wire it, then run it</h2>
+      <div class="sim">
+        <button id="bStart" class="startbtn" title="Hold to press (keyboard: Space)">START</button>
+        <button id="bStep" title="Run until the next move finishes, then pause (keyboard: S)">Step</button>
+        <button id="bPause">Pause</button>
+        <button id="bReset" class="stop" title="Back to the rest position">Reset</button>
+        <label class="sw"><input type="checkbox" id="cCont">Lock START on</label>
+        <label class="spd">Speed<input type="range" id="spd" min="0.25" max="3" step="0.25" value="1"><output id="spdOut">1×</output></label>
+      </div>
+    </div>
+    <div class="tools">
+      <p class="hint" id="wHint"></p>
+      <div class="btns"><button id="bUndo">Undo</button><button id="bRedo">Redo</button><button id="bDelW" disabled>Delete wire</button><button id="bClrW">Clear wires</button><button id="bHintW">Hint</button><button id="bAnsW" class="ans">Show wiring</button><button id="bTest" class="pri">Test circuit</button></div>
+    </div>
+    <div class="statusrow" id="statusRow">
+      <div class="panel"><div class="ptitle"><span>Displacement-step diagram</span><span class="pstat" id="pstat"></span></div><div id="sdiag"></div></div>
+      <div class="panel"><div class="ptitle"><span>What's happening</span></div><div class="narr" id="narr" aria-live="polite"></div></div>
+    </div>
+    <div class="benchbar" id="benchBar">
+      <div class="legend" id="legend"></div>
+      <div class="btns"><span class="bblbl">Zoom</span><button id="zOut" class="sm" aria-label="Zoom out">−</button><button id="zFit" class="sm">100%</button><button id="zIn" class="sm" aria-label="Zoom in">+</button><span class="bblbl">Download</span><button id="bSvg" class="sm">SVG</button><button id="bPng" class="sm">PNG</button></div>
+    </div>
+    <div class="benchwrap">
+      <div class="bench" id="bench"><svg id="circuit" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pneumatic cascade circuit"></svg><div class="cmsg" id="cMsg" hidden></div></div>
+    </div>
+    <p class="note" id="cNote"></p>
+  </section>
+
+  <section class="card c-test">
+    <h2>Test results</h2>
+    <div id="testOut"></div>
+  </section>
+  <section class="card c-log">
+    <div class="cardhead"><h2>Event log</h2><button id="bClrLog" class="sm">Clear</button></div>
+    <ol class="log" id="log"></ol>
+  </section>
+  <section class="card c-wires">
+    <h2>Connections <span class="pill" id="wCount">0</span></h2>
+    <ul class="wl" id="wList"></ul>
+  </section>
+</main>
+<footer>Practice tool for the cascade method. Symbols follow the usual ISO 1219 style; check details against your own module notes.</footer>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const ROMAN = ['I','II','III','IV','V','VI','VII','VIII'];
+const LETTERS = ['A','B','C'];
+const W = 1040, CYL_Y = 74, VY = 164, RY = 344, BY0 = 440, BGAP = 24;
+const STROKE = 120, STROKE_T = 1.1, EPS = 1e-9, STORE = 'cascade-lab-v1', THEME_KEY = 'cascade-lab-theme';
+const DEF_SEQ = {2: 'A+ B+ B- A-', 3: 'A+ B+ C+ C- B- A-'};
+const EXAMPLES = [['A+ B+ B- A-',2],['A+ B+ A- B-',2],['A+ A- B+ B-',2],['A+ B+ C+ C- B- A-',3],['A+ B+ B- C+ C- A-',3],['A+ C+ B+ A- C- B-',3],['A+ A- B+ B- C+ C-',3]];
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = t => t[0] + (t[1] === '-' ? '−' : '+');
+const ackOf = t => t[0].toLowerCase() + (t[1] === '+' ? '1' : '0');
+const normAck = s => String(s || '').toLowerCase().replace(/₀/g,'0').replace(/₁/g,'1').replace(/[\s_]/g,'');
+const isBus = id => /^G\d+$/.test(id);
+const isOut = id => isBus(id) || /^v:\w+:2$/.test(id);
+const plural = (n, a, b) => n === 1 ? a : b;
+const joinAnd = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+const vb = v => `<b>${v}</b>`;
+const wkey = (a, b) => [a, b].sort().join('|');
+
+/* ================= state ================= */
+let S = fresh(), M = null, L = null, R = null, SD = null, SIM = null, CK = null, PORT_IDS = [], ROUTES = [];
+let hist = [], future = [], pending = null, selW = -1, hovW = -1;
+let startHeld = false, startByPtr = false, startSeen = false, paused = false, speed = 1, stepRun = null;
+let drag = null, suppressClick = false, rrq = 0, zoom = 1, narr = [];
+const HINT = {ports: new Set(), wires: new Set(), buses: new Set()};
+
+function fresh() { return {v:1, nCyl:2, seqText:DEF_SEQ[2], splits:[], ack:[], dest:[], wires:[], pos:{}, hideAnswers:false}; }
+function sanitize(o) {
+  const s = fresh();
+  if (!o || typeof o !== 'object') return s;
+  if (o.nCyl === 2 || o.nCyl === 3) s.nCyl = o.nCyl;
+  if (typeof o.seqText === 'string') s.seqText = o.seqText.slice(0, 80);
+  if (Array.isArray(o.splits)) s.splits = o.splits.filter(Number.isInteger);
+  if (Array.isArray(o.ack)) s.ack = o.ack.map(x => typeof x === 'string' ? x.slice(0, 6) : '');
+  if (Array.isArray(o.dest)) s.dest = o.dest.map(x => typeof x === 'string' ? x.slice(0, 12) : '');
+  if (Array.isArray(o.wires)) s.wires = o.wires.filter(w => w && typeof w.a === 'string' && typeof w.b === 'string').map(w => ({a:w.a, b:w.b}));
+  if (o.pos && typeof o.pos === 'object') for (const k in o.pos) if (typeof o.pos[k] === 'number' && isFinite(o.pos[k])) s.pos[k] = o.pos[k];
+  s.hideAnswers = !!o.hideAnswers;
+  return s;
+}
+let saveT = 0;
+function persist() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} }, 250); }
+function enc(o) { const b = new TextEncoder().encode(JSON.stringify(o)); let s = ''; b.forEach(x => s += String.fromCharCode(x)); return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function dec(t) { let b = t.replace(/-/g,'+').replace(/_/g,'/'); while (b.length % 4) b += '='; const bin = atob(b); return JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)))); }
+
+/* ================= sequence & grouping ================= */
+function parseSeq(text, nCyl) {
+  const allowed = LETTERS.slice(0, nCyl);
+  const s = String(text || '').toUpperCase().replace(/[−–—]/g,'-').replace(/[\s,;>→\/|]+/g,'');
+  if (!s) return {err:'Type a sequence, for example A+ B+ B- A-.'};
+  if (!/^([A-Z][+-])+$/.test(s)) return {err:'Write each step as a cylinder letter followed by + or −, for example A+ B+ B- A-.'};
+  const seq = s.match(/[A-Z][+-]/g);
+  const bad = seq.find(t => !allowed.includes(t[0]));
+  if (bad) return {err:`There is no cylinder ${bad[0]} when using ${nCyl} cylinders.`, need: bad[0] === 'C' ? 3 : 0};
+  for (const c of allowed) {
+    const p = seq.filter(t => t === c + '+').length, m = seq.filter(t => t === c + '-').length;
+    if (!p && !m) return {err:`Cylinder ${c} never moves. Add ${c}+ and ${c}−, or use fewer cylinders.`, need: nCyl - 1};
+    if (p !== 1 || m !== 1) return {err:`Each cylinder must go out once and back once. ${c} has ${p}× ${c}+ and ${m}× ${c}−.`};
+  }
+  return {seq};
+}
+function groupsOf(len, splits) { const st = [0, ...splits], g = []; st.forEach((s, k) => g.push({s, e: (k + 1 < st.length ? st[k + 1] : len) - 1})); return g; }
+function greedySplits(seq) { const out = []; let seen = new Set(); seq.forEach((t, i) => { if (seen.has(t[0])) { out.push(i); seen = new Set(); } seen.add(t[0]); }); return out; }
+function groupProblems(seq, groups) {
+  const p = [];
+  groups.forEach((g, k) => { const ls = seq.slice(g.s, g.e + 1).map(t => t[0]); const i = ls.findIndex((l, x) => ls.indexOf(l) !== x); if (i >= 0) p.push({k, letter: ls[i], at: g.s + i}); });
+  return p;
+}
+const restPlus = (seq, c) => seq.indexOf(c + '+') > seq.indexOf(c + '-');
+// Signal conflicts if every limit valve were wired straight to the next move (no cascade).
+function conflictsOf(seq) {
+  const pos = {};
+  [...new Set(seq.map(t => t[0]))].forEach(c => pos[c] = restPlus(seq, c) ? 1 : 0);
+  const pressed = s => pos[s[0].toUpperCase()] === +s[1];
+  const out = [];
+  seq.forEach((t, i) => {
+    const opp = t[0] + (t[1] === '+' ? '-' : '+'), j = seq.indexOf(opp);
+    if (j > 0) { const trig = ackOf(seq[j - 1]); if (pressed(trig)) out.push({i, t, opp, j, trig}); }
+    pos[t[0]] = t[1] === '+' ? 1 : 0;
+  });
+  return out;
+}
+function derive() {
+  const r = parseSeq(S.seqText, S.nCyl);
+  if (r.err) { M = {err:r.err}; PORT_IDS = []; return; }
+  const seq = r.seq, len = seq.length;
+  S.splits = [...new Set(S.splits.filter(i => Number.isInteger(i) && i > 0 && i < len))].sort((a, b) => a - b);
+  const groups = groupsOf(len, S.splits), gOf = [];
+  groups.forEach((g, k) => { for (let i = g.s; i <= g.e; i++) gOf[i] = k + 1; });
+  const cyls = LETTERS.slice(0, S.nCyl), valves = [];
+  cyls.forEach(c => { const l = c.toLowerCase(); valves.push(l + '0', l + '1'); });
+  valves.push('START');
+  M = {seq, len, groups, n: groups.length, gOf, probs: groupProblems(seq, groups), cyls, valves, minN: greedySplits(seq).length + 1};
+  M.valid = !M.probs.length && M.n >= 2;
+  PORT_IDS = M.valid ? portIds() : [];
+}
+function expectedDest(i) { const g = M.gOf[i], grp = M.groups[g - 1]; if (i < grp.e) return 'P:' + M.seq[i + 1]; if (g < M.n) return 'G:' + (g + 1); return 'START'; }
+function destOptions() {
+  const o = M.seq.map(t => ({v:'P:' + t, t: fmt(t) + ' pilot'}));
+  for (let k = 1; k <= Math.max(M.n, M.minN, 2); k++) o.push({v:'G:' + k, t:'→ Group ' + ROMAN[k - 1]});
+  o.push({v:'START', t:'START → I'});
+  return o;
+}
+function portIds() {
+  const ids = [];
+  M.cyls.forEach(c => ids.push('p:' + c + '+', 'p:' + c + '-'));
+  M.valves.forEach(v => ids.push(`v:${v}:1`, `v:${v}:2`));
+  for (let k = 1; k <= M.n; k++) ids.push('c:' + k, 'G' + k);
+  return ids;
+}
+function portLabel(id) {
+  let m;
+  if (isBus(id)) return id + ' line';
+  if ((m = id.match(/^p:([A-C])([+-])$/))) return fmt(m[1] + m[2]) + ' pilot';
+  if ((m = id.match(/^v:(\w+):(\d)$/))) return m[1] + (m[2] === '1' ? ' in (1)' : ' out (2)');
+  if ((m = id.match(/^c:(\d+)$/))) return 'cascade → ' + ROMAN[+m[1] - 1];
+  return id;
+}
+// The reference circuit, in teaching order, with the reason for every connection.
+function solutionSteps() {
+  const st = [], {seq, groups} = M;
+  groups.forEach((g, k) => {
+    const G = 'G' + (k + 1), Rg = ROMAN[k];
+    st.push({a:G, b:'p:' + seq[g.s], why:`${fmt(seq[g.s])} is the first move of Group ${Rg}, so its pilot takes air straight from ${G}.`});
+    for (let i = g.s; i <= g.e; i++) {
+      const t = seq[i], v = ackOf(t), d = expectedDest(i);
+      st.push({a:G, b:`v:${v}:1`, why:`${vb(v)} confirms ${fmt(t)}, a Group ${Rg} move, so ${vb(v)} takes its air from ${G}.`});
+      if (d.startsWith('P:')) st.push({a:`v:${v}:2`, b:'p:' + d.slice(2), why:`When ${fmt(t)} finishes, ${vb(v)} triggers the next move, ${fmt(d.slice(2))}.`});
+      else if (d.startsWith('G:')) st.push({a:`v:${v}:2`, b:'c:' + d.slice(2), why:`${fmt(t)} is the last move of Group ${Rg}, so ${vb(v)} switches the cascade to Group ${ROMAN[+d.slice(2) - 1]}.`});
+      else {
+        st.push({a:`v:${v}:2`, b:'v:START:1', why:`${fmt(t)} ends the cycle, so ${vb(v)} feeds the START button…`});
+        st.push({a:'v:START:2', b:'c:1', why:'…and START switches the cascade back to Group I. Without START in between, the machine would restart on its own.'});
+      }
+    }
+  });
+  return st;
+}
+const solutionWires = () => solutionSteps().map(({a, b}) => ({a, b}));
+
+/* ================= simulation engine ================= */
+// Cascade valves V1..V(n-1) are stacked: V(n-1) gets main air.
+// V1: 'low' -> G1, 'high' -> G2.  Vk (k>=2): 'low' -> feeds V(k-1), 'high' -> G(k+1).
+// External inputs: c:1 -> V(n-1) low; c:(k+1) -> Vk high.  Internal resets: G(k+2) -> Vk low (k <= n-2).
+function activeGroup(cv, n) { for (let k = n - 1; k >= 2; k--) if (cv[k] === 'high') return k + 1; return cv[1] === 'low' ? 1 : 2; }
+function newSim() {
+  const sim = {x:{}, valve:{}, cv:[], t:0, conf:{}, cconf:{}, snap:null};
+  M.cyls.forEach(c => { const p = restPlus(M.seq, c); sim.x[c] = p ? 1 : 0; sim.valve[c] = p ? '+' : '-'; });
+  for (let k = 1; k <= M.n - 1; k++) sim.cv[k] = k === M.n - 1 ? 'high' : 'low';
+  computeSnap(sim, false);
+  return sim;
+}
+function computeSnap(sim, start) {
+  const n = M.n, ag = activeGroup(sim.cv, n), live = [];
+  for (let k = 1; k <= n; k++) live[k] = k === ag;
+  const act = {};
+  M.cyls.forEach(c => { const l = c.toLowerCase(); act[l + '0'] = sim.x[c] <= EPS; act[l + '1'] = sim.x[c] >= 1 - EPS; });
+  act.START = !!start;
+  const par = {};
+  PORT_IDS.forEach(i => par[i] = i);
+  const find = a => { while (par[a] !== a) { par[a] = par[par[a]]; a = par[a]; } return a; };
+  const uni = (a, b) => { if (!(a in par) || !(b in par)) return; a = find(a); b = find(b); if (a !== b) par[a] = b; };
+  S.wires.forEach(w => uni(w.a, w.b));
+  M.valves.forEach(v => { if (act[v]) uni(`v:${v}:1`, `v:${v}:2`); });
+  const srcG = {}, vent = {};
+  for (let k = 1; k <= n; k++) { const r = find('G' + k); if (live[k]) { if (!srcG[r]) srcG[r] = k; } else vent[r] = true; }
+  M.valves.forEach(v => { if (!act[v]) vent[find(`v:${v}:2`)] = true; });
+  const P = {}, leak = {}, src = {}, root = {};
+  PORT_IDS.forEach(i => { const r = find(i), p = !!srcG[r]; root[i] = r; P[i] = p && !vent[r]; leak[i] = p && !!vent[r]; src[i] = srcG[r] || 0; });
+  sim.snap = {live, act, P, leak, src, root, ag, conf: sim.conf, cconf: sim.cconf};
+  sim.snap.edges = () => { const adj = {}, add = (a, b, v) => { (adj[a] = adj[a] || []).push([b, v]); (adj[b] = adj[b] || []).push([a, v]); }; S.wires.forEach(w => add(w.a, w.b, null)); M.valves.forEach(v => { if (act[v]) add(`v:${v}:1`, `v:${v}:2`, v); }); return adj; };
+  return sim.snap;
+}
+// Which group line feeds a port, and which pressed valves the air passes through on the way (shortest path).
+function feedInfo(sn, pid) {
+  if (!sn.P[pid]) return {g: 0, via: []};
+  const g = sn.src[pid], goal = 'G' + g, adj = sn.edges(), prev = {[pid]: null}, q = [pid];
+  while (q.length) {
+    const a = q.shift(); if (a === goal) break;
+    for (const [b, v] of adj[a] || []) if (!(b in prev)) { prev[b] = [a, v]; q.push(b); }
+  }
+  const via = [];
+  for (let n = goal; prev[n]; n = prev[n][0]) if (prev[n][1]) via.push(prev[n][1]);
+  return {g, via};
+}
+function simStep(sim, dt, o) {
+  const ev = [], sn = computeSnap(sim, o.start), n = M.n;
+  const conf = {};
+  M.cyls.forEach(c => {
+    const p = sn.P['p:' + c + '+'], m = sn.P['p:' + c + '-'];
+    if (p && m) { conf[c] = true; if (!sim.conf[c]) ev.push({type:'conflict', c, f1: feedInfo(sn, 'p:' + c + '+'), f2: feedInfo(sn, 'p:' + c + '-')}); return; }
+    const nv = p ? '+' : m ? '-' : null;
+    if (nv && nv !== sim.valve[c]) { sim.valve[c] = nv; ev.push({type:'valve', a: c + nv, fi: feedInfo(sn, 'p:' + c + nv)}); }
+  });
+  const cconf = {}, ext = k => !!sn.P['c:' + k];
+  for (let k = 1; k <= n - 1; k++) {
+    const hi = ext(k + 1), lo = k === n - 1 ? ext(1) : !!sn.live[k + 2];
+    if (hi && lo) { cconf[k] = true; if (!sim.cconf[k]) ev.push({type:'cconflict', k}); }
+    else if (hi) sim.cv[k] = 'high'; else if (lo) sim.cv[k] = 'low';
+  }
+  const ag1 = activeGroup(sim.cv, n);
+  if (ag1 !== sn.ag) {
+    const gr = sn.root['G' + sn.ag];
+    ev.push({type:'group', from: sn.ag, to: ag1, fi: feedInfo(sn, 'c:' + ag1), dead: M.valves.filter(v => v !== 'START' && sn.root[`v:${v}:1`] === gr)});
+  }
+  sim.conf = conf; sim.cconf = cconf; sn.conf = conf; sn.cconf = cconf;
+  const v = dt * o.speed / STROKE_T;
+  M.cyls.forEach(c => {
+    const x0 = sim.x[c], tg = sim.valve[c] === '+' ? 1 : 0;
+    let x = x0;
+    if (tg > x) { x += v; if (x >= 1 - 1e-6) x = 1; } else if (tg < x) { x -= v; if (x <= 1e-6) x = 0; }
+    sim.x[c] = x;
+    if (x0 < 1 && x >= 1) ev.push({type:'arrive', a: c + '+'});
+    if (x0 > 0 && x <= 0) ev.push({type:'arrive', a: c + '-'});
+  });
+  sim.t += dt;
+  return ev;
+}
+const isMoving = sim => M.cyls.some(c => sim.x[c] !== (sim.valve[c] === '+' ? 1 : 0));
+const feedText = fi => !fi.g ? 'no air' : fi.via.length ? `air from G${fi.g} through ${joinAnd(fi.via.map(vb))}` : `air straight from G${fi.g}`;
+function diagnose(sim, t) {
+  const sn = sim.snap, c = t[0], pid = 'p:' + t, oid = 'p:' + c + (t[1] === '+' ? '-' : '+');
+  if (!S.wires.some(w => w.a === pid || w.b === pid)) return `Nothing is connected to the ${fmt(t)} pilot.`;
+  if (sn.P[pid] && sn.P[oid]) return `Both pilots of valve ${c} have air (signal conflict), so it can't switch to ${fmt(t)}.`;
+  if (sn.leak[pid]) return `The line feeding ${fmt(t)} is also open to an exhaust somewhere, so the air leaks away.`;
+  const i = M.seq.indexOf(t), g = M.gOf[i];
+  if (sn.ag !== g) return `${fmt(t)} is in Group ${ROMAN[g - 1]}, but Group ${ROMAN[sn.ag - 1]} is still live. Check the signal that should switch the cascade to Group ${ROMAN[g - 1]}.`;
+  if (i === M.groups[g - 1].s) return `${fmt(t)} is the first move of Group ${ROMAN[g - 1]}, so its pilot should take air straight from G${g}.`;
+  const prev = M.seq[i - 1];
+  return `${fmt(t)} should be triggered by ${vb(ackOf(prev))} (which confirms ${fmt(prev)}), supplied from G${g}.`;
+}
+
+/* ================= layout & routing ================= */
+function layout() {
+  const nC = S.nCyl, colW = W / nC, n = M.n, ports = {};
+  const P = (id, x, y, dir, zone, label) => ports[id] = {id, x, y, dir, zone, label};
+  const cx = M.cyls.map((_, i) => colW * (i + 0.5));
+  M.cyls.forEach((c, i) => { P('p:' + c + '+', cx[i] - 98, VY + 18, 'left', 'top', c + '+'); P('p:' + c + '-', cx[i] + 98, VY + 18, 'right', 'top', c + '−'); });
+  const m = M.valves.length, ax = {};
+  M.valves.forEach((id, i) => { const d = 110 + (W - 220) * i / (m - 1), s = S.pos[id]; ax[id] = clamp(typeof s === 'number' && isFinite(s) ? s : d, 110, W - 110); });
+  M.valves.forEach(id => { P(`v:${id}:2`, ax[id], RY, 'up', 'rowUp', id); P(`v:${id}:1`, ax[id], RY + 28, 'down', 'rowDown', id); });
+  const busY = k => BY0 + BGAP * (k - 1), CY0 = busY(n) + 58, CX = W / 2, cvTop = k => CY0 + (k - 1) * 84;
+  P('c:1', CX - 98, cvTop(n - 1) + 18, 'left', 'bottom', '→' + ROMAN[0]);
+  for (let k = 1; k <= n - 1; k++) P('c:' + (k + 1), CX + 98, cvTop(k) + 18, 'right', 'bottom', '→' + ROMAN[k]);
+  for (let k = 1; k <= n; k++) ports['G' + k] = {id:'G' + k, bus:true, y:busY(k), zone:'bus'};
+  L = {cx, ports, ax, busY, CY0, CX, cvTop, H: cvTop(n - 1) + 36 + 72};
+  computeRoutes();
+}
+function freeX(x0) {
+  const iv = M.valves.map(id => [L.ax[id] - 60, L.ax[id] + 64]).sort((a, b) => a[0] - b[0]), mg = [];
+  for (const v of iv) { const l = mg[mg.length - 1]; if (l && v[0] <= l[1]) l[1] = Math.max(l[1], v[1]); else mg.push([v[0], v[1]]); }
+  for (const [a, b] of mg) if (x0 > a && x0 < b) { const c = [a, b].filter(x => x >= 100 && x <= W - 58).sort((p, q) => Math.abs(p - x0) - Math.abs(q - x0)); return c.length ? c[0] : x0; }
+  return clamp(x0, 100, W - 58);
+}
+const sx16 = p => p.x + (p.dir === 'left' ? -16 : 16);
+function exitSpec(p) {
+  if (p.zone === 'top') { const sx = sx16(p); return {ux: sx, pts: r => [[p.x, p.y], [sx, p.y], [sx, r.uy]]}; }
+  if (p.zone === 'rowUp') return {ux: p.x, pts: r => [[p.x, p.y], [p.x, r.uy]]};
+  if (p.zone === 'rowDown') { const fx = freeX(p.x - 66); return {ux: fx, low: [Math.min(fx, p.x), Math.max(fx, p.x)], pts: r => [[p.x, p.y], [p.x, r.ly], [fx, r.ly], [fx, r.uy]]}; }
+  const side = p.dir;
+  return {ux: side === 'left' ? 12 : W - 12, margin: side, pts: r => [[p.x, p.y], [side === 'left' ? r.mxL : r.mxR, p.y], [side === 'left' ? r.mxL : r.mxR, r.uy]]};
+}
+function routeSpec(w) {
+  const A = L.ports[w.a], B = L.ports[w.b], s = {up:null, low:null, ml:false, mr:false};
+  if (A.bus || B.bus) {
+    const bus = A.bus ? A : B, p = A.bus ? B : A, by = bus.y;
+    if (p.zone === 'rowDown') { s.build = () => [[p.x, p.y], [p.x, by]]; return s; }
+    if (p.zone === 'bottom') { const sx = sx16(p); s.build = () => [[p.x, p.y], [sx, p.y], [sx, by]]; return s; }
+    const e = exitSpec(p), fx = freeX(e.ux);
+    s.up = [Math.min(e.ux, fx), Math.max(e.ux, fx)];
+    s.build = r => [...e.pts(r), [fx, r.uy], [fx, by]];
+    return s;
+  }
+  if (A.zone === 'rowDown' && B.zone === 'rowDown') { s.low = [Math.min(A.x, B.x), Math.max(A.x, B.x)]; s.build = r => [[A.x, A.y], [A.x, r.ly], [B.x, r.ly], [B.x, B.y]]; return s; }
+  const ea = exitSpec(A), eb = exitSpec(B);
+  s.ml = ea.margin === 'left' || eb.margin === 'left'; s.mr = ea.margin === 'right' || eb.margin === 'right';
+  s.up = [Math.min(ea.ux, eb.ux), Math.max(ea.ux, eb.ux)];
+  s.low = ea.low || eb.low || null;
+  s.build = r => [...ea.pts(r), ...eb.pts(r).reverse()];
+  return s;
+}
+function assignLanes(specs, key, max, pad) {
+  const lanes = [];
+  specs.map((s, j) => ({s, j})).filter(o => o.s[key])
+    .sort((a, b) => (a.s[key][1] - a.s[key][0]) - (b.s[key][1] - b.s[key][0]))
+    .forEach(({s}) => {
+      const [x1, x2] = s[key];
+      let k = 0;
+      while (k < max && (lanes[k] || []).some(([a, b]) => x1 < b + pad && x2 > a - pad)) k++;
+      if (k >= max) k = 0;
+      (lanes[k] = lanes[k] || []).push([x1, x2]);
+      s[key + 'L'] = k;
+    });
+}
+function computeRoutes() {
+  const specs = S.wires.map(routeSpec);
+  assignLanes(specs, 'up', 12, 10);
+  assignLanes(specs, 'low', 5, 8);
+  let li = 0, ri = 0;
+  ROUTES = specs.map(s => {
+    const r = {uy: RY - 26 - 6 * (s.upL || 0), ly: RY + 40 + 5 * (s.lowL || 0), mxL: 14 + 7 * ((s.ml ? li++ : 0) % 5), mxR: W - 14 - 7 * ((s.mr ? ri++ : 0) % 5)};
+    return simp(s.build(r));
+  });
+}
+function simp(pts) {
+  const o = [], eq = (a, b) => Math.abs(a - b) < 0.01;
+  for (const p of pts) { const l = o[o.length - 1]; if (l && eq(l[0], p[0]) && eq(l[1], p[1])) continue; o.push(p); }
+  for (let i = o.length - 2; i > 0; i--) { const a = o[i - 1], b = o[i], c = o[i + 1]; if ((eq(a[0], b[0]) && eq(b[0], c[0])) || (eq(a[1], b[1]) && eq(b[1], c[1]))) o.splice(i, 1); }
+  return o;
+}
+
+/* ================= SVG drawing ================= */
+function arrow(x1, y1, x2, y2) {
+  const a = Math.atan2(y2 - y1, x2 - x1), h = 7, w = 3.3, bx = x2 - h * Math.cos(a), by = y2 - h * Math.sin(a), px = -Math.sin(a) * w, py = Math.cos(a) * w;
+  return `<line class="fl" x1="${x1}" y1="${y1}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}"/><polygon class="ah" points="${x2},${y2} ${(bx + px).toFixed(1)},${(by + py).toFixed(1)} ${(bx - px).toFixed(1)},${(by - py).toFixed(1)}"/>`;
+}
+const tee = (x, yb) => `<path class="fl" d="M${x} ${yb}V${yb - 7}M${x - 4} ${yb - 7}H${x + 4}"/>`;
+const exhaust = (x, y) => `<path class="sym" d="M${x} ${y}V${y + 3}"/><polygon class="exh" points="${x - 4.5},${y + 3} ${x + 4.5},${y + 3} ${x},${y + 10}"/>`;
+const supply = (x, y) => `<line class="supl" x1="${x}" y1="${y}" x2="${x}" y2="${y + 12}"/><polygon class="sup" points="${x},${y + 12} ${x - 7},${y + 24} ${x + 7},${y + 24}"/>`;
+const jdot = (x, y) => `<circle class="jd" cx="${x}" cy="${y}" r="3.3"/>`;
+
+function valve52(key, cx, y, o) {
+  return `<g class="v52" data-d="vg:${key}">
+    <line class="pil" data-d="pl:${key}" x1="${cx - 98}" y1="${y + 18}" x2="${cx - 24}" y2="${y + 18}"/>
+    <line class="pil" data-d="pr:${key}" x1="${cx + 72}" y1="${y + 18}" x2="${cx + 98}" y2="${y + 18}"/>
+    <g data-d="vb:${key}" transform="translate(${cx - 24} ${y})">
+      <rect class="sq" data-d="sqL:${key}" x="0" y="0" width="48" height="36"/>
+      <rect class="sq" data-d="sqR:${key}" x="48" y="0" width="48" height="36"/>
+      ${arrow(24, 34, 12, 2)}${arrow(36, 2, 40, 34)}${tee(8, 36)}
+      ${arrow(72, 34, 84, 2)}${arrow(60, 2, 56, 34)}${tee(88, 36)}
+    </g>
+    ${exhaust(cx - 16, y + 36)}${exhaust(cx + 16, y + 36)}
+    ${o.supply ? supply(cx, y + 36) : ''}
+    <text class="pn" x="${cx - 18}" y="${y - 4}" text-anchor="end">4</text><text class="pn" x="${cx + 18}" y="${y - 4}">2</text>
+    <text class="pn" x="${cx - 24}" y="${y + 47}" text-anchor="end">5</text><text class="pn" x="${cx + 24}" y="${y + 47}">3</text><text class="pn" x="${cx + 5}" y="${y + 47}">1</text>
+    ${o.name ? `<text class="zone" x="${cx - 30}" y="${y - 6}" text-anchor="end">${o.name}</text>` : ''}
+  </g>`;
+}
+function svgCyl(c, cx) {
+  const l = c.toLowerCase(), y0 = CYL_Y - 18, y1 = CYL_Y + 18, bx0 = cx - 84, bx1 = cx + 56, p0 = cx - 80, r0 = p0 + 8 + 138, r1 = r0 + STROKE;
+  const mk = (id, x) => `<g class="mk" data-d="mk:${id}"><line x1="${x}" y1="${CYL_Y - 46}" x2="${x}" y2="${CYL_Y - 31}"/><circle cx="${x}" cy="${CYL_Y - 28}" r="3"/><text x="${x}" y="${CYL_Y - 51}" text-anchor="middle">${id}</text></g>`;
+  return `<g class="cyl">
+    <text class="big" x="${bx0 - 12}" y="${CYL_Y + 9}" text-anchor="end">${c}</text>
+    <rect class="cylbody" x="${bx0}" y="${y0}" width="${bx1 - bx0}" height="${y1 - y0}"/>
+    <rect class="ch" data-d="rch:${c}" x="${bx0 + 2}" y="${y0 + 2}" width="2" height="${y1 - y0 - 4}"/>
+    <rect class="ch" data-d="fch:${c}" x="${p0 + 8}" y="${y0 + 2}" width="2" height="${y1 - y0 - 4}"/>
+    <line class="sym" x1="${bx0 + 5}" y1="${y0}" x2="${bx0 + 5}" y2="${y1}"/>
+    <g data-d="pist:${c}">
+      <rect class="piston" x="${p0}" y="${y0 + 1}" width="8" height="${y1 - y0 - 2}"/>
+      <rect class="rod" x="${p0 + 8}" y="${CYL_Y - 4}" width="138" height="8"/>
+      <rect class="cam" x="${r0 - 3}" y="${CYL_Y - 26}" width="6" height="32" rx="1.5"/>
+    </g>
+    ${mk(l + '0', r0)}${mk(l + '1', r1)}
+    <circle class="cport" cx="${cx - 76}" cy="${y1}" r="2.6"/><circle class="cport" cx="${cx + 48}" cy="${y1}" r="2.6"/>
+    <path class="tube" data-d="t4:${c}" d="M${cx - 12} ${VY}V${VY - 38}H${cx - 76}V${y1}"/>
+    <path class="tube" data-d="t2:${c}" d="M${cx + 12} ${VY}V${VY - 38}H${cx + 48}V${y1}"/>
+    ${valve52('V:' + c, cx, VY, {supply: true})}
+  </g>`;
+}
+function svg32(id) {
+  const x = L.ax[id], y = RY, st = id === 'START';
+  const actuator = st
+    ? `<path class="sym" d="M0 14H-8"/><path class="btn" d="M-8 4A10 10 0 0 0 -8 24Z"/>`
+    : `<path class="sym" d="M0 14H-8"/><circle class="roller" cx="-14" cy="14" r="6"/><circle class="ah" cx="-14" cy="14" r="1.6"/>`;
+  const hw = st ? 60 : 44;
+  return `<g class="v32${st ? ' start' : ''}" data-d="g32:${id}">
+    <g class="handle" data-drag="${id}"><rect class="hbg" x="${x + 8}" y="${y - 22}" width="${hw}" height="18" rx="9"/><text class="vl" x="${x + 8 + hw / 2}" y="${y - 8.5}" text-anchor="middle">${st ? 'START' : id}</text></g>
+    <g data-d="rb:${id}" transform="translate(${x - 38} ${y})" class="${st ? 'pressable' : 'dragbody'}" ${st ? 'data-start="1"' : `data-drag="${id}"`}>
+      <rect class="sq" data-d="sqA:${id}" x="0" y="0" width="28" height="28"/>
+      <rect class="sq" data-d="sqN:${id}" x="28" y="0" width="28" height="28"/>
+      ${arrow(10, 26, 10, 2)}${tee(20, 28)}${arrow(38, 2, 47, 26)}${tee(38, 28)}
+      ${actuator}
+      <path class="sym" d="M56 14l2 -6l3 12l3 -12l3 12l2 -6"/>
+      <rect x="-22" y="0" width="94" height="28" fill="transparent"/>
+    </g>
+    ${exhaust(x + 10, y + 28)}
+  </g>`;
+}
+function svgBus(k) {
+  const y = L.busY(k);
+  return `<g class="bus g${k}" data-d="bus:${k}"><line class="bl" x1="92" y1="${y}" x2="${W - 50}" y2="${y}"/><text class="busl" x="52" y="${y + 5}">G${k}</text><line class="bushit" data-bus="G${k}" x1="52" y1="${y}" x2="${W - 50}" y2="${y}"><title>Group line G${k} (Group ${ROMAN[k - 1]})</title></line></g>`;
+}
+function svgCascade() {
+  const n = M.n, CX = L.CX, top = L.cvTop, by = L.busY, o = [];
+  o.push(`<path class="cl g1" data-d="cl:g1" d="M${CX - 12} ${top(1)}V${by(1)}"/>${jdot(CX - 12, by(1))}`);
+  o.push(`<path class="cl g2" data-d="cl:g2" d="M${CX + 12} ${top(1)}V${by(2)}"/>${jdot(CX + 12, by(2))}`);
+  for (let k = 2; k <= n - 1; k++) {
+    const t = top(k), lx = CX + 150 + 12 * (k - 2);
+    o.push(`<path class="cl g${k + 1}" data-d="cl:g${k + 1}" d="M${CX + 12} ${t}V${t - 10}H${lx}V${by(k + 1)}"/>${jdot(lx, by(k + 1))}`);
+    o.push(`<path class="cl air" data-d="cl:up${k}" d="M${CX - 12} ${t}V${t - 18}H${CX}V${top(k - 1) + 36}"/>`);
+  }
+  for (let k = 1; k <= n - 2; k++) {
+    const t = top(k), lx = CX - 150 - 12 * (k - 1);
+    o.push(`<path class="cl g${k + 2}" data-d="cl:rs${k}" d="M${lx} ${by(k + 2)}V${t + 18}H${CX - 98}"/>${jdot(lx, by(k + 2))}<circle class="idot" cx="${CX - 98}" cy="${t + 18}" r="3"/>`);
+  }
+  for (let k = 1; k <= n - 1; k++) o.push(valve52('CV:' + k, CX, top(k), {supply: k === n - 1, name: n > 2 ? 'Cascade valve V' + k : 'Cascade valve'}));
+  return o.join('');
+}
+function svgPorts() {
+  return Object.values(L.ports).filter(p => !p.bus).map(p => {
+    let lab;
+    if (p.zone === 'top' || p.zone === 'bottom') lab = `<text class="plab" x="${p.x}" y="${p.y - 9}" text-anchor="middle">${p.label}</text><text class="pn" x="${p.x}" y="${p.y + 17}" text-anchor="middle">${p.dir === 'left' ? '14' : '12'}</text>`;
+    else lab = `<text class="pn" x="${p.x - 6}" y="${p.zone === 'rowUp' ? p.y - 3 : p.y + 11}" text-anchor="end">${p.id.endsWith(':2') ? '2' : '1'}</text>`;
+    return `<g class="port" data-d="pt:${p.id}"><circle class="dot" cx="${p.x}" cy="${p.y}" r="3.8"/><circle class="hit" data-port="${p.id}" cx="${p.x}" cy="${p.y}" r="10"><title>${esc(portLabel(p.id))}</title></circle>${lab}</g>`;
+  }).join('');
+}
+function svgWire(w, j) {
+  const pts = ROUTES[j], d = 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L'), last = pts[pts.length - 1];
+  const bus = isBus(w.a) || isBus(w.b);
+  return `<g class="wg" data-d="w:${j}"><path class="wire" d="${d}"/>${bus ? `<circle class="wjd" cx="${last[0]}" cy="${last[1]}" r="3.4"/>` : ''}<path class="whit" data-wire="${j}" d="${d}"><title>${esc(portLabel(w.a) + '  ↔  ' + portLabel(w.b))}</title></path></g>`;
+}
+function svgScene() {
+  const o = [];
+  o.push(`<defs><pattern id="slots" width="40" height="40" patternUnits="userSpaceOnUse"><line class="slot" x1="0" y1="20" x2="40" y2="20"/><line class="slothi" x1="0" y1="22" x2="40" y2="22"/></pattern></defs>`);
+  o.push(`<rect class="benchbg" x="0" y="0" width="${W}" height="${L.H}"/><rect x="0" y="0" width="${W}" height="${L.H}" fill="url(#slots)"/>`);
+  M.cyls.forEach((c, i) => o.push(svgCyl(c, L.cx[i])));
+  for (let k = 1; k <= M.n; k++) o.push(svgBus(k));
+  o.push(svgCascade());
+  M.valves.forEach(id => o.push(svg32(id)));
+  o.push(`<g>${S.wires.map((w, j) => svgWire(w, j)).join('')}</g>`);
+  o.push(svgPorts());
+  o.push(`<path id="rubber" class="rubber" d=""/>`);
+  return o.join('');
+}
+
+/* ================= rendering ================= */
+function collectRefs() {
+  const m = new Map(), last = new Map();
+  $$('[data-d]', $('#circuit')).forEach(el => m.set(el.dataset.d, el));
+  R = {
+    attr(k, a, v) { const e = m.get(k); if (!e) return; v = String(v); const key = k + '|' + a; if (last.get(key) !== v) { e.setAttribute(a, v); last.set(key, v); } },
+    cls(k, v) { this.attr(k, 'class', v); }
+  };
+}
+function applyZoom() {
+  const svg = $('#circuit');
+  if (zoom === 0) { svg.style.width = '100%'; svg.style.minWidth = '0'; }
+  else { svg.style.width = (zoom * 100) + '%'; svg.style.minWidth = Math.round(900 * zoom) + 'px'; }
+  $('#zFit').textContent = zoom === 0 ? 'Fit' : Math.round(zoom * 100) + '%';
+}
+function renderCircuit() {
+  const svg = $('#circuit'), msg = $('#cMsg');
+  const show = !!(M && !M.err && M.valid);
+  $('#statusRow').hidden = !show; $('#benchBar').hidden = !show;
+  if (!show) {
+    svg.innerHTML = ''; svg.style.display = 'none'; R = null; msg.hidden = false;
+    msg.innerHTML = !M || M.err ? 'Load a valid sequence first.'
+      : M.n < 2 ? 'Split the sequence into groups in the <b>cascade table</b> first. The circuit is built from your grouping.'
+      : `Fix the grouping first: <b>Group ${ROMAN[M.probs[0].k]}</b> has <b>${M.probs[0].letter}</b> twice.`;
+    $('#cNote').textContent = ''; return;
+  }
+  svg.style.display = ''; msg.hidden = true;
+  layout();
+  svg.setAttribute('viewBox', `0 0 ${W} ${L.H}`);
+  svg.innerHTML = svgScene();
+  applyZoom();
+  collectRefs();
+  $('#cNote').textContent = M.n > 2 ? `With ${M.n} groups the ${M.n - 1} cascade valves are stacked: the bottom one gets main air and passes it up, and each group line resets the valve above it. Those links are already drawn; you wire the → inputs.` : '';
+  if (SIM) view();
+}
+function view() {
+  if (!R || !SIM || !SIM.snap) return;
+  const sn = SIM.snap, n = M.n;
+  const v52 = (key, cx, y, left, conf) => {
+    const tx = left ? cx - 24 : cx - 72;
+    R.attr('vb:' + key, 'transform', `translate(${tx} ${y})`);
+    R.attr('pl:' + key, 'x2', tx); R.attr('pr:' + key, 'x1', tx + 96);
+    R.cls('sqL:' + key, left ? 'sq active' : 'sq'); R.cls('sqR:' + key, left ? 'sq' : 'sq active');
+    R.cls('vg:' + key, conf ? 'v52 conflict' : 'v52');
+  };
+  M.cyls.forEach((c, i) => {
+    const cx = L.cx[i], dx = SIM.x[c] * STROKE, p = cx - 80 + dx, plus = SIM.valve[c] === '+', l = c.toLowerCase();
+    R.attr('pist:' + c, 'transform', `translate(${dx.toFixed(1)} 0)`);
+    R.attr('rch:' + c, 'width', Math.max(0, p - (cx - 82)).toFixed(1));
+    R.attr('fch:' + c, 'x', (p + 8).toFixed(1)); R.attr('fch:' + c, 'width', Math.max(0, cx + 54 - (p + 8)).toFixed(1));
+    R.cls('rch:' + c, plus ? 'ch on' : 'ch'); R.cls('fch:' + c, plus ? 'ch' : 'ch on');
+    R.cls('t4:' + c, plus ? 'tube on' : 'tube'); R.cls('t2:' + c, plus ? 'tube' : 'tube on');
+    v52('V:' + c, cx, VY, plus, !!(sn.conf && sn.conf[c]));
+    R.cls('mk:' + l + '0', sn.act[l + '0'] ? 'mk act' : 'mk'); R.cls('mk:' + l + '1', sn.act[l + '1'] ? 'mk act' : 'mk');
+  });
+  M.valves.forEach(id => {
+    const a = !!sn.act[id], x = L.ax[id];
+    R.attr('rb:' + id, 'transform', `translate(${a ? x - 10 : x - 38} ${RY})`);
+    R.cls('sqA:' + id, a ? 'sq active' : 'sq'); R.cls('sqN:' + id, a ? 'sq' : 'sq active');
+    R.cls('g32:' + id, 'v32' + (id === 'START' ? ' start' : '') + (a ? ' act' : ''));
+  });
+  for (let k = 1; k <= n; k++) R.cls('bus:' + k, `bus g${k}${sn.live[k] ? ' live' : ''}${pending && pending.id === 'G' + k ? ' pend' : ''}${HINT.buses.has('G' + k) ? ' hint' : ''}`);
+  for (let k = 1; k <= n - 1; k++) v52('CV:' + k, L.CX, L.cvTop(k), SIM.cv[k] === 'low', !!(sn.cconf && sn.cconf[k]));
+  for (let k = 1; k <= n; k++) R.cls('cl:g' + k, `cl g${k}${sn.live[k] ? ' on' : ''}`);
+  const sup = []; sup[n - 1] = true;
+  for (let k = n - 2; k >= 1; k--) sup[k] = sup[k + 1] && SIM.cv[k + 1] === 'low';
+  for (let k = 2; k <= n - 1; k++) R.cls('cl:up' + k, `cl air${sup[k] && SIM.cv[k] === 'low' ? ' on' : ''}`);
+  for (let k = 1; k <= n - 2; k++) R.cls('cl:rs' + k, `cl g${k + 2}${sn.live[k + 2] ? ' on' : ''}`);
+  for (const id in L.ports) {
+    if (L.ports[id].bus) continue;
+    R.cls('pt:' + id, 'port' + (sn.P[id] ? ' on g' + sn.src[id] : '') + (sn.leak[id] ? ' leak' : '') + (pending && pending.id === id ? ' pending' : '') + (HINT.ports.has(id) ? ' hint' : ''));
+  }
+  S.wires.forEach((w, j) => R.cls('w:' + j, 'wg' + (sn.P[w.a] ? ' on g' + sn.src[w.a] : '') + (sn.leak[w.a] ? ' leak' : '') + (j === selW ? ' sel' : '') + (j === hovW ? ' hov' : '') + (HINT.wires.has(j) ? ' hint' : '')));
+  viewStepDiag();
+}
+function renderLegend() {
+  const el = $('#legend');
+  if (!M || !M.valid) { el.innerHTML = ''; return; }
+  let h = '';
+  for (let k = 1; k <= M.n; k++) h += `<span class="g${k}"><i style="background:var(--gc)"></i>air from G${k}</span>`;
+  h += `<span><i style="background:var(--air)"></i>main supply</span><span><i style="background:var(--bad)"></i>signal conflict</span><span><i style="background:repeating-linear-gradient(90deg,var(--warn) 0 6px,transparent 6px 10px)"></i>leaking to exhaust</span>`;
+  el.innerHTML = h;
+}
+function renderSeq() {
+  $$('#cylSeg button').forEach(b => { const on = +b.dataset.cyl === S.nCyl; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+  if (document.activeElement !== $('#seqIn')) $('#seqIn').value = S.seqText.replace(/-/g, '−');
+  const m = $('#seqMsg');
+  if (M.err) { m.className = 'msg bad'; m.textContent = M.err; $('#conf').hidden = true; return; }
+  const rest = M.cyls.map(c => `${c} ${restPlus(M.seq, c) ? 'extended' : 'retracted'}`).join(', ');
+  m.className = 'msg'; m.textContent = `${M.len} moves with ${S.nCyl} cylinders. At rest: ${rest}.`;
+  renderConflicts();
+}
+function renderConflicts() {
+  const el = $('#conf'), cs = conflictsOf(M.seq);
+  el.hidden = false;
+  if (!cs.length) { el.innerHTML = `<h3>Without a cascade</h3><p>No signal conflicts. Wiring each limit valve straight to the next move would also work for this sequence; the cascade still works, it just isn't strictly needed.</p>`; return; }
+  const items = cs.map(c => {
+    const gi = M.gOf[c.i], gj = M.gOf[c.j];
+    const fix = !M.valid ? `<span class="fx">Put ${fmt(c.t)} and ${fmt(c.opp)} in different groups to fix this.</span>`
+      : gi !== gj ? `<span class="fx ok">Fixed by your grouping: ${fmt(c.opp)} is in Group ${ROMAN[gj - 1]}, which has no air while ${fmt(c.t)} (Group ${ROMAN[gi - 1]}) runs.</span>`
+      : `<span class="fx bad">Still a conflict: ${fmt(c.t)} and ${fmt(c.opp)} are in the same group.</span>`;
+    return `<li><b>Move ${c.i + 1}, ${fmt(c.t)}:</b> ${vb(c.trig)} is still pressed, and ${vb(c.trig)} is the signal for ${fmt(c.opp)}, so valve ${c.t[0]} would get both signals and jam. ${fix}</li>`;
+  }).join('');
+  el.innerHTML = `<h3>Without a cascade: ${cs.length} signal ${plural(cs.length, 'conflict', 'conflicts')}</h3><p class="muted">If each limit valve were wired straight to the next move:</p><ol>${items}</ol>`;
+}
+function renderTable() {
+  const t = $('#ctab'), gm = $('#grpMsg');
+  if (M.err) { t.innerHTML = '<tr><td class="muted">Load a valid sequence first.</td></tr>'; gm.textContent = ''; return; }
+  const {seq, groups} = M, last = seq.length - 1, gap = i => i < last ? '<td class="gap"></td>' : '';
+  let h = '<tr><th scope="row">Group</th>';
+  groups.forEach((g, k) => {
+    const bad = M.n >= 2 && M.probs.find(p => p.k === k);
+    h += `<td colspan="${2 * (g.e - g.s) + 1}" class="gc g${k + 1}${bad ? ' bad' : ''}">${ROMAN[k]}${bad ? `<small>${bad.letter} twice</small>` : ''}</td>`;
+    if (k < groups.length - 1) h += '<td class="gap"></td>';
+  });
+  h += '</tr><tr><th scope="row">Action</th>';
+  seq.forEach((tk, i) => {
+    h += `<td class="act g${M.gOf[i]}">${fmt(tk)}</td>`;
+    if (i < last) { const on = S.splits.includes(i + 1); h += `<td class="gap"><button type="button" class="cut${on ? ' on' : ''}" data-cut="${i + 1}" aria-pressed="${on}" title="${on ? 'Join these groups' : 'Start a new group here'}">${on ? '✂' : '⋮'}</button></td>`; }
+  });
+  h += '</tr><tr><th scope="row">Ack signal</th>';
+  seq.forEach((tk, i) => { h += `<td><input class="ack" data-i="${i}" value="${esc(S.ack[i] || '')}" maxlength="4" placeholder="?" autocomplete="off" spellcheck="false" aria-label="Acknowledgement signal for ${fmt(tk)}"></td>` + gap(i); });
+  h += '</tr><tr><th scope="row">Goes to</th>';
+  const opts = destOptions();
+  seq.forEach((tk, i) => { h += `<td><select class="dest" data-i="${i}" aria-label="Where the ${fmt(tk)} acknowledgement goes"><option value="">?</option>${opts.map(o => `<option value="${o.v}"${S.dest[i] === o.v ? ' selected' : ''}>${esc(o.t)}</option>`).join('')}</select></td>` + gap(i); });
+  t.innerHTML = h + '</tr>';
+  if (M.n < 2) { gm.className = 'msg'; gm.innerHTML = 'Everything is in one group. Click <b>⋮</b> where a new group should start.'; }
+  else if (M.probs.length) { gm.className = 'msg bad'; gm.textContent = `Group ${ROMAN[M.probs[0].k]} has ${M.probs[0].letter} twice. A cylinder can only move once per group.`; }
+  else { gm.className = 'msg ok'; gm.textContent = `${M.n} groups, so ${M.n} group lines and ${M.n - 1} cascade ${plural(M.n - 1, 'valve', 'valves')}.`; }
+}
+function renderWireList() {
+  const ul = $('#wList');
+  $('#wCount').textContent = S.wires.length;
+  if (!S.wires.length) { ul.innerHTML = '<li class="muted">No connections yet. Click two ports on the bench to connect them.</li>'; return; }
+  ul.innerHTML = S.wires.map((w, j) => `<li data-wi="${j}" class="${j === selW ? 'sel' : ''}"><span>${esc(portLabel(w.a))}</span><span class="arr">↔</span><span>${esc(portLabel(w.b))}</span><button data-delw="${j}" aria-label="Delete this connection">✕</button></li>`).join('');
+}
+function applyAnsMode() { document.body.classList.toggle('noans', !!S.hideAnswers); }
+
+/* ===== displacement-step diagram ===== */
+function renderStepDiag() {
+  const el = $('#sdiag');
+  if (!M || !M.valid) { el.innerHTML = ''; SD = null; return; }
+  const n = M.len, cyls = M.cyls, LW = 34, SW = clamp(Math.round(560 / n), 56, 96), TOP = 26, RH = 40, AMP = 22, BOT = 18;
+  const Wd = LW + SW * n + 18, Hd = TOP + RH * cyls.length + BOT;
+  const pos = [];
+  let cur = {};
+  cyls.forEach(c => cur[c] = restPlus(M.seq, c) ? 1 : 0);
+  pos.push({...cur});
+  M.seq.forEach(t => { cur = {...cur, [t[0]]: t[1] === '+' ? 1 : 0}; pos.push(cur); });
+  const X = k => LW + SW * k, Y = (ci, v) => TOP + RH * ci + RH - 9 - v * AMP;
+  let h = `<svg viewBox="0 0 ${Wd} ${Hd}" role="img" aria-label="Displacement-step diagram">`;
+  M.seq.forEach((t, i) => { h += `<rect class="sdband g${M.gOf[i]}" x="${X(i)}" y="${TOP - 6}" width="${SW}" height="${RH * cyls.length + 6}"/><text class="sdact g${M.gOf[i]}" x="${X(i) + SW / 2}" y="${TOP - 10}" text-anchor="middle">${fmt(t)}</text>`; });
+  for (let k = 0; k <= n; k++) h += `<line class="sdb" x1="${X(k)}" y1="${TOP - 6}" x2="${X(k)}" y2="${Hd - BOT + 2}"/><text class="sdn" x="${X(k)}" y="${Hd - 4}" text-anchor="middle">${k === n ? 1 : k + 1}</text>`;
+  cyls.forEach((c, ci) => {
+    h += `<text class="sdc" x="${LW - 12}" y="${Y(ci, .5) + 5}" text-anchor="end">${c}</text><line class="sdr" x1="${X(0)}" x2="${X(n)}" y1="${Y(ci, 0)}" y2="${Y(ci, 0)}"/>`;
+    h += `<polyline class="sdl" points="${pos.map((p, k) => `${X(k)},${Y(ci, p[c])}`).join(' ')}"/>`;
+    M.seq.forEach((t, i) => { if (t[0] === c) h += `<text class="sdk" x="${X(i + 1) + 4}" y="${Y(ci, pos[i + 1][c]) + (t[1] === '+' ? -4 : 12)}">${ackOf(t)}</text>`; });
+  });
+  h += `<line class="sdcur" data-sd="cur" x1="${X(0)}" x2="${X(0)}" y1="${TOP - 6}" y2="${Hd - BOT + 2}"/>`;
+  cyls.forEach((c, ci) => h += `<circle class="sddot" data-sd="dot:${c}" cx="${X(0)}" cy="${Y(ci, pos[0][c])}" r="5"/>`);
+  el.innerHTML = h + '</svg>';
+  SD = {X, Y, pos, n, cur: el.querySelector('[data-sd="cur"]'), dots: Object.fromEntries(cyls.map(c => [c, el.querySelector(`[data-sd="dot:${c}"]`)])), last: {}};
+}
+function viewStepDiag() {
+  if (!SD || !SIM || !CK) return;
+  let s = 0;
+  if (CK.status === 'running' || CK.status === 'error') { const t = M.seq[CK.idx]; s = t ? CK.idx + clamp(t[1] === '+' ? SIM.x[t[0]] : 1 - SIM.x[t[0]], 0, 1) : CK.idx; }
+  else if (CK.status === 'done') s = SD.n;
+  const set = (el, k, a, v) => { const key = k + a; v = String(v); if (SD.last[key] !== v) { el.setAttribute(a, v); SD.last[key] = v; } };
+  const x = SD.X(s).toFixed(1);
+  set(SD.cur, 'cur', 'x1', x); set(SD.cur, 'cur', 'x2', x);
+  set(SD.cur, 'cur', 'class', 'sdcur' + (CK.status === 'error' ? ' bad' : CK.stuck ? ' stuck' : ''));
+  const k = Math.min(Math.floor(s), SD.n), f = s - k;
+  M.cyls.forEach((c, ci) => {
+    const a = SD.pos[k][c], b = SD.pos[Math.min(k + 1, SD.n)][c], exp = a + (b - a) * f;
+    set(SD.dots[c], c, 'cx', x); set(SD.dots[c], c, 'cy', SD.Y(ci, SIM.x[c]).toFixed(1));
+    set(SD.dots[c], c, 'class', 'sddot' + (Math.abs(SIM.x[c] - exp) > 0.12 ? ' off' : ''));
+  });
+}
+function renderStatus() {
+  const el = $('#pstat');
+  if (!CK) { el.textContent = ''; return; }
+  const st = CK.stuck ? 'stuck' : CK.status;
+  el.className = 'pstat ' + st;
+  el.textContent = st === 'ready' ? 'At rest, waiting for START'
+    : st === 'running' ? `Running, move ${Math.min(CK.idx + 1, M.len)} of ${M.len}`
+    : st === 'done' ? `Cycle ${CK.cycles} complete in ${CK.dur.toFixed(1)} s`
+    : st === 'error' ? 'Out of order. Press Reset.'
+    : `Stuck before ${fmt(M.seq[Math.min(CK.idx, M.len - 1)])}`;
+}
+function renderNarr() {
+  const el = $('#narr');
+  if (!narr.length) { el.innerHTML = '<p class="empty">Press <b>Step</b> to run one move at a time, or hold <b>START</b>. Each move is explained here: where its air comes from and why.</p>'; return; }
+  el.innerHTML = narr.slice(-6).map(([m, c]) => `<p class="${c}">${m}</p>`).join('');
+  el.scrollTop = el.scrollHeight;
+}
+function say(msg, cls = '') { narr.push([msg, cls]); if (narr.length > 30) narr.shift(); renderNarr(); }
+
+/* ================= live simulation ================= */
+function resetSim() {
+  stepRun = null;
+  if (M && M.valid) { SIM = newSim(); CK = {idx:0, status:'ready', idle:0, stuck:false, cycles:0, dur:0, t0:0}; }
+  else { SIM = null; CK = null; }
+  startSeen = false; narr = [];
+  renderStatus(); renderNarr();
+  if (R && SIM) view();
+}
+function log(msg, cls = '', grp = 0) {
+  const ol = $('#log'), li = document.createElement('li');
+  li.className = cls + (grp ? ' g' + grp : '');
+  li.innerHTML = `<time>${(SIM ? SIM.t : 0).toFixed(1)}s</time><span>${msg}</span>`;
+  ol.prepend(li);
+  while (ol.children.length > 150) ol.lastChild.remove();
+}
+function onEvents(evs) {
+  for (const e of evs) {
+    if (e.type === 'valve') {
+      const m = `${fmt(e.a)} starts: its pilot gets ${feedText(e.fi)}.`;
+      log(m); say(m, e.fi.g ? 'g' + e.fi.g : '');
+      if (CK.status === 'ready' || CK.status === 'done') {
+        if (!startSeen) { const w = 'A cycle started without START being pressed. The last signal of the cycle should pass through START.'; log('⚠ ' + w, 'warn'); say(w, 'warn'); }
+        CK.status = 'running'; CK.idx = 0; CK.stuck = false; CK.t0 = SIM.t;
+      } else if (CK.stuck) CK.stuck = false;
+      CK.idle = 0; renderStatus();
+    } else if (e.type === 'arrive') {
+      const m = `${fmt(e.a)} done: ${vb(ackOf(e.a))} is pressed.`;
+      log(m); say(m);
+      if (CK.status === 'running') {
+        const exp = M.seq[CK.idx];
+        if (e.a === exp) {
+          CK.idx++;
+          if (CK.idx === M.len) {
+            CK.status = 'done'; CK.cycles++; CK.dur = SIM.t - CK.t0; startSeen = false;
+            const d = `Cycle complete, every move in the right order (${CK.dur.toFixed(1)} s). Group ${ROMAN[M.n - 1]} stays live, so the circuit waits for START.`;
+            log('✓ ' + d, 'good'); say(d, 'good');
+          }
+        } else {
+          CK.status = 'error';
+          const b = `Expected ${fmt(exp)} next, but ${fmt(e.a)} happened.`;
+          log('✗ ' + b, 'bad'); say(b, 'bad');
+        }
+        renderStatus();
+      }
+      CK.idle = 0;
+    } else if (e.type === 'group') {
+      const cause = e.fi.g ? (e.fi.via.length ? `Air from G${e.fi.g} through ${joinAnd(e.fi.via.map(vb))}` : `Air straight from G${e.fi.g}`) : 'A signal';
+      const dead = e.dead.length ? ` Everything fed from G${e.from} (${joinAnd(e.dead.map(vb))}) goes dead.` : '';
+      const m = `Group ${ROMAN[e.to - 1]} is live. ${cause} reached the cascade's →${ROMAN[e.to - 1]} input, so G${e.to} gets air and G${e.from} exhausts.${dead}`;
+      log(m, 'grp', e.to); say(m, 'g' + e.to);
+    } else if (e.type === 'conflict') {
+      const m = `Signal conflict on valve ${e.c}: ${e.c}+ gets ${feedText(e.f1)} while ${e.c}− gets ${feedText(e.f2)}, so the valve can't switch.`;
+      log('⚠ ' + m, 'bad'); say(m, 'bad');
+    } else if (e.type === 'cconflict') {
+      const m = `Signal conflict on cascade valve V${e.k}: both of its inputs have air, so it can't switch groups.`;
+      log('⚠ ' + m, 'bad'); say(m, 'bad');
+    }
+  }
+}
+function tickChecker(dt) {
+  if (!CK) return;
+  if (isMoving(SIM)) { CK.idle = 0; return; }
+  CK.idle += dt;
+  if (CK.status === 'running' && CK.idle > 1.2 && !CK.stuck) {
+    CK.stuck = true;
+    const m = `Stuck waiting for ${fmt(M.seq[CK.idx])}. ${diagnose(SIM, M.seq[CK.idx])}`;
+    log('… ' + m, 'warn'); say(m, 'warn'); renderStatus();
+  }
+}
+function setPaused(v) { paused = v; $('#bPause').textContent = v ? 'Resume' : 'Pause'; }
+function doStep() {
+  if (!SIM) { toast('Sort out the grouping in the cascade table first.'); return; }
+  if (CK.status === 'error') resetSim();
+  narr = [];
+  const atRest = !isMoving(SIM) && (CK.status === 'ready' || CK.status === 'done');
+  stepRun = {t0: SIM.t, auto: atRest ? SIM.t + 0.25 : -1};
+  if (atRest) { startSeen = true; log('START pressed (step)', 'start'); say('START pressed.'); }
+  renderNarr(); setPaused(false);
+}
+function finishStep(stalled) {
+  stepRun = null; setPaused(true);
+  if (stalled) say(`Nothing moved. ${CK.status === 'running' ? diagnose(SIM, M.seq[CK.idx]) : 'Check that START is wired into the circuit and the last group line is live.'}`, 'warn');
+}
+let lastTs = 0;
+function loop(ts) {
+  requestAnimationFrame(loop);
+  let dt = (ts - lastTs) / 1000; lastTs = ts;
+  if (!SIM || !R) return;
+  if (!(dt > 0)) dt = 0;
+  dt = Math.min(dt, 0.05);
+  if (!paused) {
+    const N = 4, cont = $('#cCont').checked;
+    for (let i = 0; i < N; i++) {
+      const auto = stepRun && SIM.t < stepRun.auto;
+      const ev = simStep(SIM, dt / N, {speed, start: startHeld || cont || auto});
+      if (ev.length) { onEvents(ev); if (stepRun && ev.some(e => e.type === 'arrive')) { finishStep(false); break; } }
+    }
+    if (stepRun && !isMoving(SIM) && SIM.t - stepRun.t0 > 2) finishStep(true);
+    tickChecker(dt);
+  }
+  view();
+}
+function pressStart(on) {
+  if (startHeld === on) return;
+  startHeld = on;
+  $('#bStart').classList.toggle('down', on);
+  if (on) { startSeen = true; if (SIM) log('START pressed', 'start'); if (paused) toast('The simulation is paused. Press Resume.'); }
+}
+
+/* ================= automatic test ================= */
+function runTest() {
+  const out = [], add = (k, t) => out.push([k, t]), conn = id => S.wires.some(w => w.a === id || w.b === id);
+  if (!S.wires.length) { showTest([['bad', 'There are no wires yet. Connect the circuit first, or press Hint for a place to start.']], ['bad', 'Nothing to test'], []); return; }
+  const missP = [];
+  M.cyls.forEach(c => ['+', '-'].forEach(d => { if (!conn('p:' + c + d)) missP.push(fmt(c + d)); }));
+  if (missP.length) add('warn', `${plural(missP.length, 'Pilot', 'Pilots')} with nothing connected: ${missP.join(', ')}.`);
+  const missC = [];
+  for (let k = 1; k <= M.n; k++) if (!conn('c:' + k)) missC.push('→' + ROMAN[k - 1]);
+  if (missC.length) add('warn', `Cascade ${plural(missC.length, 'input', 'inputs')} with nothing connected: ${missC.join(', ')}.`);
+  M.valves.forEach(v => { if (conn(`v:${v}:2`) && !conn(`v:${v}:1`)) add('warn', `${v}'s output is used but its port 1 has no air supply.`); });
+  if (!conn('v:START:1') && !conn('v:START:2')) add('warn', 'START isn’t wired into the circuit.');
+
+  const sim = newSim(), dt = 1 / 240, trace = [];
+  let t = 0, moved = null;
+  while (t < 1.5) { const ev = simStep(sim, dt, {speed:1, start:false}); t += dt; moved = ev.find(e => e.type === 'valve'); if (moved) break; }
+  if (moved) { add('bad', `${fmt(moved.a)} moves before START is pressed. At rest the circuit must sit still until START.`); showTest(out, ['bad', '✗ Not working yet'], [fmt(moved.a)]); return; }
+  add('ok', 'Sits still at rest until START is pressed.');
+  trace.push('START');
+  t = 0; const got = []; let err = null, idle = 0, leak = false; const confl = new Set();
+  while (t < 4 * M.len + 4) {
+    const ev = simStep(sim, dt, {speed:1, start: t < 0.25}); t += dt;
+    Object.keys(sim.conf).forEach(c => confl.add('valve ' + c));
+    Object.keys(sim.cconf).forEach(k => confl.add('cascade valve V' + k));
+    if (Object.values(sim.snap.leak).some(Boolean)) leak = true;
+    for (const e of ev) {
+      if (e.type === 'group') trace.push('Group ' + ROMAN[e.to - 1]);
+      if (e.type === 'arrive') { const exp = M.seq[got.length]; got.push(e.a); trace.push(fmt(e.a)); if (e.a !== exp) { err = `Move ${got.length}: expected ${fmt(exp)}, but ${fmt(e.a)} happened.`; break; } }
+    }
+    if (err || got.length === M.len) break;
+    if (isMoving(sim)) idle = 0; else if ((idle += dt) > 1.5 && t > 0.5) break;
+  }
+  let ok = true;
+  if (confl.size) { ok = false; add('bad', `Signal conflict on ${joinAnd([...confl])}: both pilots had air at the same time.`); }
+  if (leak) add('warn', 'Somewhere a pressurised line is joined to a line that vents to exhaust, for example two outputs joined without a shuttle valve, or a group line wired to a valve output.');
+  if (err) { ok = false; add('bad', err); }
+  else if (got.length < M.len) {
+    ok = false; const nx = M.seq[got.length];
+    add('bad', `${got.length ? `After ${got.map(fmt).join(' ')}` : 'After pressing START'} nothing more happens: ${fmt(nx)} never starts. ${diagnose(sim, nx)}`);
+  } else {
+    add('ok', `Runs the full cycle in order: ${M.seq.map(fmt).join(' ')}.`);
+    let again = null; t = 0;
+    while (t < 2.5) { const ev = simStep(sim, dt, {speed:1, start:false}); t += dt; again = ev.find(e => e.type === 'valve'); if (again) break; }
+    if (again) { ok = false; add('bad', 'After finishing, it starts again by itself. The last signal of the cycle must go through START before it switches to Group I.'); }
+    else add('ok', 'Stops after one cycle and waits for START again.');
+  }
+  showTest(out, ok ? ['ok', '✓ Circuit works'] : ['bad', '✗ Not working yet'], trace);
+}
+function showTest(items, verdict, trace) {
+  const ic = {ok:'✓', bad:'✗', warn:'!'};
+  $('#testOut').innerHTML = `<p class="verdict ${verdict[0]}">${verdict[1]}</p><ul class="tl">${items.map(([k, t]) => `<li class="${k}"><span class="ic">${ic[k]}</span><span>${t}</span></li>`).join('')}</ul>` + (trace && trace.length ? `<p class="trace">What happened: ${trace.map(x => `<b>${x}</b>`).join(' → ')}</p>` : '');
+  if (window.innerWidth < 1000) $('.c-test').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function resetTestOut() { $('#testOut').innerHTML = '<p class="hint">Press <b>Test circuit</b> to run one full cycle automatically and check it against the sequence.</p>'; }
+
+/* ================= table check & hints ================= */
+function checkTable() {
+  if (M.err) return;
+  clearTableHint();
+  const fb = [], groupsOk = M.n >= 2 && !M.probs.length;
+  if (!groupsOk) fb.push(['bad', M.n < 2 ? 'Split the sequence into groups first, using the ⋮ buttons.' : `Group ${ROMAN[M.probs[0].k]} has ${M.probs[0].letter} twice. Each cylinder may move only once per group.`]);
+  else if (M.n > M.minN) fb.push(['warn', `Your ${M.n} groups would work, but ${M.minN} is enough (${M.minN - 1} cascade ${plural(M.minN - 1, 'valve', 'valves')}). Fewer groups means fewer valves.`]);
+  else fb.push(['ok', `Grouping is right: ${M.n} groups, ${M.n - 1} cascade ${plural(M.n - 1, 'valve', 'valves')}.`]);
+  let aBad = 0, aEmpty = 0, dBad = 0, dEmpty = 0, startHint = false;
+  M.seq.forEach((t, i) => {
+    const a = normAck(S.ack[i]), el = $(`.ack[data-i="${i}"]`);
+    el.classList.remove('ok', 'bad');
+    if (!a) aEmpty++; else { const ok = a === ackOf(t); el.classList.add(ok ? 'ok' : 'bad'); if (!ok) aBad++; }
+    const d = S.dest[i] || '', sel = $(`.dest[data-i="${i}"]`);
+    sel.classList.remove('ok', 'bad');
+    if (!groupsOk) return;
+    if (!d) dEmpty++; else { const exp = expectedDest(i), ok = d === exp; sel.classList.add(ok ? 'ok' : 'bad'); if (!ok) { dBad++; if (exp === 'START' && d === 'G:1') startHint = true; } }
+  });
+  if (!aBad && !aEmpty) fb.push(['ok', 'All acknowledgement signals are correct.']);
+  if (aBad) fb.push(['bad', `${aBad} ack ${plural(aBad, 'signal is', 'signals are')} wrong. Tip: X+ is confirmed by x1 (fully out), X− by x0 (fully in).`]);
+  if (aEmpty) fb.push(['warn', `${aEmpty} ack ${plural(aEmpty, 'signal is', 'signals are')} still blank.`]);
+  if (groupsOk) {
+    if (!dBad && !dEmpty) fb.push(['ok', 'Every ack signal goes to the right place.']);
+    if (dBad) fb.push(['bad', `${dBad} “goes to” ${plural(dBad, 'entry is', 'entries are')} wrong.`]);
+    if (startHint) fb.push(['warn', 'The last signal of the cycle has to pass through START before switching to Group I, otherwise the machine would restart on its own.']);
+    if (dEmpty) fb.push(['warn', `${dEmpty} “goes to” ${plural(dEmpty, 'entry is', 'entries are')} still blank.`]);
+  }
+  const all = groupsOk && M.n === M.minN && !aBad && !aEmpty && !dBad && !dEmpty;
+  const ic = {ok:'✓', bad:'✗', warn:'!'};
+  $('#tabFb').innerHTML = (all ? '<li class="ok"><span class="ic">★</span><span><b>Table complete.</b> Now wire it up on the bench below.</span></li>' : '') + fb.map(([k, t]) => `<li class="${k}"><span class="ic">${ic[k]}</span><span>${t}</span></li>`).join('');
+}
+function clearTableHint() { $$('#ctab .hl').forEach(e => e.classList.remove('hl')); }
+function tableHint() {
+  if (M.err) return;
+  clearTableHint();
+  let msg = '', el = null;
+  if (M.n < 2 || M.probs.length) {
+    const at = M.n < 2 ? greedySplits(M.seq)[0] : M.probs[0].at, letter = M.seq[at][0];
+    msg = `${letter} has already moved in this group, so a new group has to start just before ${fmt(M.seq[at])}. Click the ⋮ to its left.`;
+    el = $(`[data-cut="${at}"]`);
+  } else if (M.n > M.minN) {
+    const rm = S.splits.find(sp => !groupProblems(M.seq, groupsOf(M.len, S.splits.filter(x => x !== sp))).length);
+    msg = `You can merge two groups: remove the split before ${fmt(M.seq[rm])}. No letter would repeat.`;
+    el = $(`[data-cut="${rm}"]`);
+  } else {
+    const ai = M.seq.findIndex((t, i) => normAck(S.ack[i]) !== ackOf(t));
+    if (ai >= 0) {
+      const t = M.seq[ai];
+      msg = `${fmt(t)} ${t[1] === '+' ? 'pushes' : 'pulls'} ${t[0]} fully ${t[1] === '+' ? 'out' : 'in'}, so the limit valve it presses is ${vb(ackOf(t))}.`;
+      el = $(`.ack[data-i="${ai}"]`);
+    } else {
+      const di = M.seq.findIndex((t, i) => S.dest[i] !== expectedDest(i));
+      if (di >= 0) {
+        const t = M.seq[di], d = expectedDest(di), v = vb(ackOf(t)), g = ROMAN[M.gOf[di] - 1];
+        msg = d.startsWith('P:') ? `${v} confirms ${fmt(t)}. The next move in the same group is ${fmt(d.slice(2))}, so ${v} drives the ${fmt(d.slice(2))} pilot.`
+          : d.startsWith('G:') ? `${fmt(t)} is the last move of Group ${g}, so ${v} switches the cascade to Group ${ROMAN[+d.slice(2) - 1]}.`
+          : `${fmt(t)} is the last move of the whole cycle, so ${v} goes through START back to Group I.`;
+        el = $(`.dest[data-i="${di}"]`);
+      } else msg = 'The table is complete. Press Check table, then wire it up below.';
+    }
+  }
+  if (el) { el.classList.add('hl'); el.scrollIntoView({block:'nearest', inline:'center'}); }
+  $('#tabFb').innerHTML = `<li class="tip"><span class="ic">?</span><span>${msg}</span></li>`;
+}
+function clearHint() { HINT.ports.clear(); HINT.wires.clear(); HINT.buses.clear(); }
+function wiringHint() {
+  if (!M.valid) { toast('Sort out the grouping in the cascade table first.'); return; }
+  clearHint();
+  const steps = solutionSteps(), have = new Set(S.wires.map(w => wkey(w.a, w.b)));
+  const la = ackOf(M.seq[M.len - 1]), G = 'G' + M.n;
+  const altB = [[G, 'v:START:1'], ['v:START:2', `v:${la}:1`], [`v:${la}:2`, 'c:1']];
+  if (altB.some(([a, b]) => have.has(wkey(a, b))) && !have.has(wkey(`v:${la}:2`, 'v:START:1'))) {
+    const why = ['START sits first in the chain here, fed from ' + G + '…', `…then ${vb(la)}…`, '…and on to the cascade’s →I input. That order works too.'];
+    const idx = steps.findIndex(s => s.b === `v:${la}:1` && s.a === G);
+    steps.splice(idx, 3, ...altB.map(([a, b], i) => ({a, b, why: why[i]})));
+  }
+  const target = new Set(steps.map(s => wkey(s.a, s.b)));
+  const done = steps.filter(s => have.has(wkey(s.a, s.b))).length;
+  const wrong = S.wires.findIndex(w => !target.has(wkey(w.a, w.b)));
+  let msg;
+  if (wrong >= 0) {
+    const w = S.wires[wrong];
+    HINT.wires.add(wrong);
+    msg = `<b>${esc(portLabel(w.a))} ↔ ${esc(portLabel(w.b))}</b> isn't part of this circuit. Click it and press Delete.`;
+  } else {
+    const miss = steps.find(s => !have.has(wkey(s.a, s.b)));
+    if (miss) {
+      [miss.a, miss.b].forEach(id => isBus(id) ? HINT.buses.add(id) : HINT.ports.add(id));
+      msg = `Connect <b>${esc(portLabel(miss.a))}</b> to <b>${esc(portLabel(miss.b))}</b> (both flashing). ${miss.why}`;
+    } else msg = 'Every connection is in place. Press START, Step or Test circuit.';
+  }
+  hint(`${msg} <span class="muted">(${done} of ${steps.length} connections done)</span>`);
+  view();
+}
+
+/* ================= wiring interaction ================= */
+const defaultHint = () => 'Click a port, then another port or a group line, to connect them. Click a wire to select it. Drag the valve labels to tidy up.';
+function hint(h) { $('#wHint').innerHTML = h; }
+function svgPt(e) { const svg = $('#circuit'), m = svg.getScreenCTM(); if (!m) return {x:0, y:0}; const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(m.inverse()); }
+function portPos(id) { const p = L.ports[id]; return p.bus ? {x: pending && pending.id === id && pending.x != null ? pending.x : W / 2, y: p.y} : {x:p.x, y:p.y}; }
+function cancelPending() { if (!pending) return; pending = null; const r = $('#rubber'); if (r) r.setAttribute('d', ''); hint(defaultHint()); view(); }
+function pickEnd(id, x) {
+  if (!pending) { pending = {id, x}; selectWire(-1); clearHint(); hint(`From <b>${esc(portLabel(id))}</b>: now click the other end. <kbd>Esc</kbd> cancels.`); view(); return; }
+  if (pending.id === id) { cancelPending(); return; }
+  const a = pending.id, b = id;
+  pending = null; hint(defaultHint());
+  if (isBus(a) && isBus(b)) { toast('Two group lines can’t be joined: only one of them may carry air at a time.'); view(); return; }
+  if (S.wires.some(w => wkey(w.a, w.b) === wkey(a, b))) { toast('Those two are already connected.'); view(); return; }
+  if (isOut(a) && isOut(b)) toast('Heads-up: joining two outputs without a shuttle valve lets air escape through the other one’s exhaust.');
+  pushHist(); S.wires.push({a, b}); afterWireChange();
+}
+function selectWire(j) {
+  selW = j; $('#bDelW').disabled = j < 0;
+  $$('#wList li[data-wi]').forEach(li => li.classList.toggle('sel', +li.dataset.wi === j));
+  if (j >= 0) hint(`Selected <b>${esc(portLabel(S.wires[j].a))} ↔ ${esc(portLabel(S.wires[j].b))}</b>. Press <kbd>Delete</kbd> or the Delete wire button.`);
+  else if (!pending) hint(defaultHint());
+  view();
+}
+function deleteWire(j) { if (j < 0 || j >= S.wires.length) return; pushHist(); S.wires.splice(j, 1); selW = -1; $('#bDelW').disabled = true; afterWireChange(); hint(defaultHint()); }
+function pushHist() { hist.push(JSON.stringify(S.wires)); if (hist.length > 100) hist.shift(); future = []; }
+function undo() { if (!hist.length) { toast('Nothing to undo.'); return; } future.push(JSON.stringify(S.wires)); S.wires = JSON.parse(hist.pop()); selW = -1; $('#bDelW').disabled = true; afterWireChange(); }
+function redo() { if (!future.length) { toast('Nothing to redo.'); return; } hist.push(JSON.stringify(S.wires)); S.wires = JSON.parse(future.pop()); selW = -1; $('#bDelW').disabled = true; afterWireChange(); }
+function afterWireChange() {
+  clearHint(); persist(); renderCircuit(); renderWireList();
+  if (SIM) { computeSnap(SIM, startHeld || $('#cCont').checked); view(); }
+}
+function scheduleRender() { if (rrq) return; rrq = requestAnimationFrame(() => { rrq = 0; renderCircuit(); }); }
+
+/* ================= export ================= */
+// Bake the on-screen colours into attributes so the file looks the same in any viewer.
+const EXPORT_PROPS = ['fill','fill-opacity','stroke','stroke-width','stroke-dasharray','stroke-linecap','stroke-linejoin','opacity','font-family','font-size','font-weight'];
+function svgString() {
+  const src = $('#circuit'), clone = src.cloneNode(true), a = [src, ...src.querySelectorAll('*')], b = [clone, ...clone.querySelectorAll('*')];
+  a.forEach((el, i) => {
+    const t = b[i];
+    if (el.tagName === 'pattern' || el.closest('pattern')) { const cs = getComputedStyle(el); EXPORT_PROPS.forEach(p => t.setAttribute(p, cs.getPropertyValue(p))); return; }
+    if (el === src || /^(g|defs|title)$/i.test(el.tagName)) return;
+    const cs = getComputedStyle(el);
+    EXPORT_PROPS.forEach(p => { const v = cs.getPropertyValue(p); if (v) t.setAttribute(p, v); });
+    t.removeAttribute('class');
+  });
+  clone.querySelectorAll('.whit,.hit,.bushit,#rubber,title').forEach(e => e.remove());
+  clone.querySelectorAll('[stroke="transparent"],[stroke="rgba(0, 0, 0, 0)"]').forEach(e => { if (e.getAttribute('fill') === 'rgba(0, 0, 0, 0)' || e.getAttribute('fill') === 'transparent') e.remove(); });
+  clone.removeAttribute('style'); clone.removeAttribute('class');
+  clone.setAttribute('width', W); clone.setAttribute('height', L.H);
+  return new XMLSerializer().serializeToString(clone);
+}
+function download(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); }
+const fileBase = () => 'cascade-' + S.seqText.replace(/\s+/g, '').replace(/\+/g, 'p').replace(/-/g, 'm');
+function exportSvg() { if (!R) return; download(new Blob([svgString()], {type:'image/svg+xml'}), fileBase() + '.svg'); }
+function exportPng() {
+  if (!R) return;
+  const img = new Image(), url = URL.createObjectURL(new Blob([svgString()], {type:'image/svg+xml'}));
+  img.onload = () => {
+    const c = document.createElement('canvas'), s = 2; c.width = W * s; c.height = L.H * s;
+    const g = c.getContext('2d'); g.scale(s, s); g.drawImage(img, 0, 0); URL.revokeObjectURL(url);
+    c.toBlob(b => b && download(b, fileBase() + '.png'), 'image/png');
+  };
+  img.onerror = () => toast('PNG export failed in this browser. Try SVG instead.');
+  img.src = url;
+}
+
+/* ================= rebuild / session ================= */
+function rebuild() {
+  derive();
+  if (M.valid) { const ids = new Set(PORT_IDS); S.wires = S.wires.filter(w => ids.has(w.a) && ids.has(w.b) && w.a !== w.b); }
+  selW = -1; pending = null; clearHint(); $('#bDelW').disabled = true;
+  renderSeq(); renderTable(); renderCircuit(); renderStepDiag(); renderWireList(); renderLegend(); resetSim(); applyAnsMode(); persist();
+  hint(defaultHint());
+}
+function resetWork() { S.splits = []; S.ack = []; S.dest = []; S.wires = []; hist = []; future = []; $('#tabFb').innerHTML = ''; resetTestOut(); }
+function clearLog() { $('#log').innerHTML = ''; }
+function loadSeqText(txt, quiet) {
+  let r = parseSeq(txt, S.nCyl), n = S.nCyl;
+  if (r.err && r.need >= 2 && r.need <= 3) { const r2 = parseSeq(txt, r.need); if (!r2.err) { n = r.need; r = r2; } }
+  if (r.err) { const m = $('#seqMsg'); m.className = 'msg bad'; m.textContent = r.err; return false; }
+  if (n !== S.nCyl) { S.nCyl = n; S.pos = {}; if (!quiet) toast(`Switched to ${n} cylinders to fit that sequence.`); }
+  S.seqText = r.seq.join(' ');
+  resetWork(); rebuild(); clearLog();
+  return true;
+}
+function randomSeq(n) {
+  const cyls = LETTERS.slice(0, n);
+  let fallback = null;
+  for (let tries = 0; tries < 500; tries++) {
+    const toks = [];
+    cyls.forEach(c => toks.push(c + '+', c + '-'));
+    for (let i = toks.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [toks[i], toks[j]] = [toks[j], toks[i]]; }
+    if (cyls.some(c => toks.indexOf(c + '+') > toks.indexOf(c + '-'))) continue;
+    const s = toks.join(' ');
+    if (s === S.seqText) continue;
+    if (conflictsOf(toks).length || Math.random() < 0.15) return s;
+    fallback = fallback || s;
+  }
+  return fallback || DEF_SEQ[n];
+}
+let toastT = 0;
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 3400); }
+async function copyText(t) { try { await navigator.clipboard.writeText(t); return true; } catch (e) { window.prompt('Copy this link:', t); return false; } }
+function share(o, okMsg) {
+  if (location.protocol === 'file:') { toast('Links only work once the page is online, for example on GitHub Pages. For now, use Save file and send the .json.'); return; }
+  copyText(location.href.split('#')[0] + '#s=' + enc(o)).then(ok => ok && toast(okMsg));
+}
+function loadInitial() {
+  const h = location.hash;
+  if (h.startsWith('#s=')) {
+    try { S = sanitize(dec(h.slice(3))); history.replaceState(null, '', location.pathname + location.search); setTimeout(() => toast(S.hideAnswers ? 'Exercise loaded. Good luck!' : 'Shared session loaded.'), 300); return; }
+    catch (e) { setTimeout(() => toast('That share link is broken, so the page started fresh.'), 300); }
+  }
+  try { const raw = localStorage.getItem(STORE); if (raw) S = sanitize(JSON.parse(raw)); } catch (e) {}
+}
+function themeLabel() { const t = document.documentElement.getAttribute('data-theme') || 'auto'; $('#bTheme').textContent = 'Theme: ' + t; }
+
+/* ================= events ================= */
+function bind() {
+  $('#exList').innerHTML = '<span>Try:</span>' + EXAMPLES.map(([s, c]) => `<button type="button" data-ex="${esc(s)}" data-c="${c}">${esc(s.replace(/-/g, '−'))}</button>`).join('') + '<button type="button" class="rnd" id="bRandom" title="A new random sequence for the chosen number of cylinders">Random</button>';
+  $('#exList').addEventListener('click', e => {
+    if (e.target.closest('#bRandom')) { loadSeqText(randomSeq(S.nCyl), true); return; }
+    const b = e.target.closest('[data-ex]'); if (!b) return;
+    const c = +b.dataset.c; if (c !== S.nCyl) S.pos = {};
+    S.nCyl = c; S.seqText = b.dataset.ex; resetWork(); rebuild(); clearLog();
+  });
+  $('#cylSeg').addEventListener('click', e => {
+    const b = e.target.closest('[data-cyl]'); if (!b) return;
+    const c = +b.dataset.cyl; if (c === S.nCyl) return;
+    S.nCyl = c; S.pos = {}; S.seqText = DEF_SEQ[c]; resetWork(); rebuild(); clearLog();
+    toast(`Loaded a ${c}-cylinder example. Type your own sequence any time.`);
+  });
+  $('#bLoad').addEventListener('click', () => loadSeqText($('#seqIn').value));
+  $('#seqIn').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); loadSeqText($('#seqIn').value); } });
+
+  $('#ctab').addEventListener('click', e => {
+    const b = e.target.closest('[data-cut]'); if (!b) return;
+    const i = +b.dataset.cut;
+    S.splits = S.splits.includes(i) ? S.splits.filter(x => x !== i) : [...S.splits, i];
+    $('#tabFb').innerHTML = ''; rebuild();
+  });
+  $('#ctab').addEventListener('input', e => {
+    const el = e.target;
+    if (el.classList.contains('ack')) { S.ack[+el.dataset.i] = el.value; el.classList.remove('ok', 'bad', 'hl'); persist(); }
+  });
+  $('#ctab').addEventListener('change', e => {
+    const el = e.target;
+    if (el.classList.contains('dest')) { S.dest[+el.dataset.i] = el.value; el.classList.remove('ok', 'bad', 'hl'); persist(); }
+  });
+  $('#bCheck').addEventListener('click', checkTable);
+  $('#bHintT').addEventListener('click', tableHint);
+  $('#bClearT').addEventListener('click', () => { S.splits = []; S.ack = []; S.dest = []; $('#tabFb').innerHTML = ''; rebuild(); });
+  $('#bAnsT').addEventListener('click', () => {
+    if (M.err) return;
+    S.splits = greedySplits(M.seq); derive();
+    S.ack = M.seq.map(ackOf); S.dest = M.seq.map((_, i) => expectedDest(i));
+    rebuild(); checkTable();
+  });
+
+  const svg = $('#circuit');
+  svg.addEventListener('pointerdown', e => {
+    const t = e.target;
+    if (t.closest('[data-start]')) { e.preventDefault(); startByPtr = true; pressStart(true); return; }
+    const dg = t.closest('[data-drag]');
+    if (dg && L) { const p = svgPt(e); drag = {id: dg.dataset.drag, x0: p.x, ax0: L.ax[dg.dataset.drag], moved: false}; try { svg.setPointerCapture(e.pointerId); } catch (err) {} e.preventDefault(); }
+  });
+  svg.addEventListener('pointermove', e => {
+    if (drag) {
+      const p = svgPt(e), dx = p.x - drag.x0;
+      if (Math.abs(dx) > 3) drag.moved = true;
+      if (drag.moved) { S.pos[drag.id] = clamp(drag.ax0 + dx, 110, W - 110); scheduleRender(); }
+      return;
+    }
+    if (pending && L) {
+      const p = svgPt(e), a = portPos(pending.id), r = $('#rubber');
+      if (r) r.setAttribute('d', `M${a.x} ${a.y}L${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
+    }
+  });
+  const endDrag = () => { if (drag) { if (drag.moved) { suppressClick = true; persist(); } drag = null; } };
+  svg.addEventListener('pointerup', endDrag);
+  svg.addEventListener('pointercancel', endDrag);
+  const releaseStart = () => { if (startByPtr) { startByPtr = false; pressStart(false); } };
+  window.addEventListener('pointerup', releaseStart);
+  window.addEventListener('pointercancel', releaseStart);
+  svg.addEventListener('click', e => {
+    if (suppressClick) { suppressClick = false; return; }
+    const t = e.target;
+    const port = t.closest('[data-port]'); if (port) { pickEnd(port.dataset.port, null); return; }
+    const bus = t.closest('[data-bus]'); if (bus) { pickEnd(bus.dataset.bus, svgPt(e).x); return; }
+    const wh = t.closest('[data-wire]'); if (wh) { cancelPending(); selectWire(+wh.dataset.wire); return; }
+    if (t.closest('[data-start]') || t.closest('[data-drag]')) return;
+    cancelPending(); selectWire(-1);
+  });
+
+  $('#wList').addEventListener('click', e => {
+    const d = e.target.closest('[data-delw]'); if (d) { deleteWire(+d.dataset.delw); return; }
+    const li = e.target.closest('li[data-wi]'); if (li) selectWire(+li.dataset.wi);
+  });
+  $('#wList').addEventListener('mouseover', e => { const li = e.target.closest('li[data-wi]'); hovW = li ? +li.dataset.wi : -1; view(); });
+  $('#wList').addEventListener('mouseleave', () => { hovW = -1; view(); });
+
+  $('#bUndo').addEventListener('click', undo);
+  $('#bRedo').addEventListener('click', redo);
+  $('#bDelW').addEventListener('click', () => deleteWire(selW));
+  $('#bClrW').addEventListener('click', () => { if (!S.wires.length) return; if (!confirm('Remove all wires?')) return; pushHist(); S.wires = []; selW = -1; afterWireChange(); });
+  $('#bHintW').addEventListener('click', wiringHint);
+  $('#bAnsW').addEventListener('click', () => {
+    if (M.err) { toast('Load a valid sequence first.'); return; }
+    if (!M.valid) { S.splits = greedySplits(M.seq); toast('Applied the minimum grouping first.'); }
+    if (S.wires.length && !confirm('Replace your wiring with the answer?')) return;
+    pushHist(); const h = hist; derive(); S.wires = solutionWires(); rebuild(); hist = h;
+  });
+  $('#bTest').addEventListener('click', () => { if (!M.valid) { toast('Sort out the grouping in the cascade table first.'); return; } runTest(); });
+
+  const bs = $('#bStart');
+  bs.addEventListener('pointerdown', e => { e.preventDefault(); startByPtr = true; pressStart(true); });
+  bs.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); pressStart(true); } });
+  bs.addEventListener('keyup', e => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); pressStart(false); } });
+  $('#bStep').addEventListener('click', doStep);
+  $('#cCont').addEventListener('change', e => { if (e.target.checked) { startSeen = true; log('START locked on (continuous cycling)', 'start'); } else log('START released'); });
+  $('#bPause').addEventListener('click', () => { stepRun = null; setPaused(!paused); });
+  $('#bReset').addEventListener('click', () => { resetSim(); setPaused(false); log('Reset to the rest position'); });
+  $('#spd').addEventListener('input', e => { speed = +e.target.value; $('#spdOut').textContent = speed + '×'; });
+  $('#bClrLog').addEventListener('click', clearLog);
+  const Z = [1, 1.25, 1.5, 2];
+  $('#zIn').addEventListener('click', () => { zoom = zoom === 0 ? 1 : Z[Math.min(Z.indexOf(zoom) + 1, Z.length - 1)]; applyZoom(); });
+  $('#zOut').addEventListener('click', () => { zoom = zoom <= 1 ? 0 : Z[Math.max(Z.indexOf(zoom) - 1, 0)]; applyZoom(); });
+  $('#zFit').addEventListener('click', () => { zoom = zoom === 0 ? 1 : 0; applyZoom(); });
+  $('#bSvg').addEventListener('click', exportSvg);
+  $('#bPng').addEventListener('click', exportPng);
+
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (e.key === 'Escape') { cancelPending(); selectWire(-1); return; }
+    if (/INPUT|SELECT|TEXTAREA|BUTTON|SUMMARY/.test(tag)) return;
+    if (e.code === 'Space') { e.preventDefault(); if (!e.repeat) pressStart(true); }
+    else if (e.key === 's' || e.key === 'S') { if (!e.ctrlKey && !e.metaKey) doStep(); }
+    else if ((e.key === 'Delete' || e.key === 'Backspace') && selW >= 0) { e.preventDefault(); deleteWire(selW); }
+    else if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))) { e.preventDefault(); redo(); }
+    else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); }
+  });
+  document.addEventListener('keyup', e => { if (e.code === 'Space' && !startByPtr) pressStart(false); });
+
+  $('#bTheme').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') || 'auto', next = {auto:'light', light:'dark', dark:'auto'}[cur];
+    if (next === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+    themeLabel();
+  });
+  $('#bNew').addEventListener('click', () => { if (!confirm('Start a new session? This clears the current table and wiring.')) return; S = fresh(); hist = []; future = []; resetTestOut(); $('#tabFb').innerHTML = ''; rebuild(); clearLog(); });
+  $('#bSave').addEventListener('click', () => download(new Blob([JSON.stringify(S, null, 1)], {type:'application/json'}), fileBase() + '.json'));
+  $('#bOpen').addEventListener('click', () => $('#fileIn').click());
+  $('#fileIn').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { try { S = sanitize(JSON.parse(rd.result)); hist = []; future = []; resetTestOut(); $('#tabFb').innerHTML = ''; rebuild(); clearLog(); toast('Session opened.'); } catch (err) { toast('That file isn’t a Cascade Lab session.'); } };
+    rd.readAsText(f); e.target.value = '';
+  });
+  $('#bShare').addEventListener('click', () => share(S, 'Link copied. It opens this exact session, table and wiring included.'));
+  $('#bShareEx').addEventListener('click', () => share({...fresh(), nCyl: S.nCyl, seqText: S.seqText, pos: S.pos, hideAnswers: true}, 'Exercise link copied: blank table, no wiring, answer buttons hidden.'));
+}
+
+loadInitial();
+bind();
+themeLabel();
+resetTestOut();
+rebuild();
+requestAnimationFrame(loop);
+window.__cascadeLab = {get S() { return S; }, get M() { return M; }, get SIM() { return SIM; }, get CK() { return CK; }, runTest, solutionWires, conflictsOf, randomSeq, doStep, stepSim: (dt, start) => simStep(SIM, dt, {speed:1, start})};
+})();
+</script>
+</body>
+</html>
