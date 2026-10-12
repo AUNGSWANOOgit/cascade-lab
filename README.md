@@ -17,23 +17,3 @@ Answers: **Show answer** (table) and **Show wiring** (circuit).
 - **Save file / Open file** – keep sessions as `.json` files.
 
 Everything runs in the browser; there is no server and nothing is uploaded.
-
-## Put it on GitHub Pages
-
-1. Create a new public repository on GitHub, e.g. `cascade-lab`.
-2. Upload `index.html` (and this README) to the repository root and commit.
-3. Go to **Settings → Pages**. Under *Build and deployment*, set **Source** to *Deploy from a branch*, choose `main` and `/ (root)`, then **Save**.
-4. After a minute the site is live at `https://<your-username>.github.io/cascade-lab/`.
-
-From a terminal instead:
-
-```bash
-git init cascade-lab && cd cascade-lab
-cp /path/to/index.html /path/to/README.md .
-git add . && git commit -m "Cascade Lab"
-git branch -M main
-git remote add origin https://github.com/<your-username>/cascade-lab.git
-git push -u origin main
-```
-
-Then turn on Pages as in step 3.
